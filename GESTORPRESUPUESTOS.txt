@@ -1,0 +1,571 @@
+/*
+Sistema de Gestion de Presupuestos Oracle Python
+
+Integrantes 
+Christopher Briceno Arias
+Salim Mustafa Arce
+Jose Daniel Rojas Campos
+
+Tabla CompraGasto:
+
+ID_CompraGasto: Identificador único de la compra/gasto.
+ID_Permiso: Clave foránea que referencia el ID_Permiso de la tabla Permiso.
+Numero_Comprobante: Número del comprobante asociado a la compra/gasto.
+Monto_Real: Monto real de la compra/gasto con precisión de dos decimales.
+Fecha: Fecha de la compra/gasto.
+Clave foránea: Establece una relación con la tabla Permiso a través de la columna ID_Permiso.
+Tabla Permiso:
+
+ID_Permiso: Identificador único del permiso.
+ID_Usuario: Clave foránea que referencia el ID_Usuario de la tabla Usuario.
+MontoSolicitado: Monto solicitado en el permiso con precisión de dos decimales.
+Estado: Estado del permiso.
+CodigoPermiso: Código asociado al permiso.
+Fecha: Fecha del permiso.
+ID_Presupuesto: Clave foránea que referencia el ID_Presupuesto de la tabla Presupuesto.
+Claves foráneas: Establece relaciones con las tablas Usuario y Presupuesto.
+Tabla Usuario:
+
+ID_Usuario: Identificador único del usuario.
+Nombre: Nombre del usuario.
+Rol: Rol del usuario.
+ID_CentroDeCosto: Clave foránea que referencia el ID_CentroDeCosto de la tabla CentroDeCosto.
+Clave foránea: Establece una relación con la tabla CentroDeCosto.
+Tabla CentroDeCosto:
+
+ID_CentroDeCosto: Identificador único del centro de costo.
+Nombre: Nombre del centro de costo.
+ID_Padre: Identificador del centro de costo padre.
+Tabla Presupuesto:
+
+ID_Presupuesto: Identificador único del presupuesto.
+ID_CentroDeCosto: Clave foránea que referencia el ID_CentroDeCosto de la tabla CentroDeCosto.
+ID_RUBRO: Clave foránea que referencia el ID_RUBRO de la tabla Rubro.
+Monto: Monto del presupuesto con precisión de dos decimales.
+Periodo: Período del presupuesto.
+Claves foráneas: Establece relaciones con las tablas CentroDeCosto y Rubro.
+Tabla Modificacion:
+
+ID_Modificacion: Identificador único de la modificación.
+ID_PresupuestoOrigen: Clave foránea que referencia el ID_Presupuesto de la tabla Presupuesto.
+ID_PresupuestoDestino: Clave foránea que referencia el ID_Presupuesto de la tabla Presupuesto.
+Monto: Monto de la modificación con precisión de dos decimales.
+Fecha: Fecha de la modificación.
+Claves foráneas: Establece relaciones con la tabla Presupuesto.
+Tabla Liquidacion:
+
+ID_Liquidacion: Identificador único de la liquidación.
+ID_Presupuesto: Clave foránea que referencia el ID_Presupuesto de la tabla Presupuesto.
+Monto: Monto de la liquidación con precisión de dos decimales.
+Fecha: Fecha de la liquidación.
+Clave foránea: Establece una relación con la tabla Presupuesto.
+Tabla Rubro:
+
+ID_Rubro: Identificador único del rubro.
+Nombre: Nombre del rubro.
+
+
+Tabla CompraGasto:
+ID_CompraGasto: Identificador único de la compra/gasto.
+ID_Permiso: Clave foránea que referencia el ID_Permiso de la tabla Permiso.
+Numero_Comprobante: Número del comprobante asociado a la compra/gasto.
+Monto_Real: Monto real de la compra/gasto con precisión de dos decimales.
+Fecha: Fecha de la compra/gasto.
+Clave foránea: Establece una relación con la tabla Permiso a través de la columna ID_Permiso.
+
+Tabla Permiso:
+
+ID_Permiso: Identificador único del permiso.
+ID_Usuario: Clave foránea que referencia el ID_Usuario de la tabla Usuario.
+MontoSolicitado: Monto solicitado en el permiso con precisión de dos decimales.
+Estado: Estado del permiso.
+CodigoPermiso: Código asociado al permiso.
+Fecha: Fecha del permiso.
+ID_Presupuesto: Clave foránea que referencia el ID_Presupuesto de la tabla Presupuesto.
+Claves foráneas: Establece relaciones con las tablas Usuario y Presupuesto.
+
+Tabla Usuario:
+
+ID_Usuario: Identificador único del usuario.
+Nombre: Nombre del usuario.
+Rol: Rol del usuario.
+ID_CentroDeCosto: Clave foránea que referencia el ID_CentroDeCosto de la tabla CentroDeCosto.
+Clave foránea: Establece una relación con la tabla CentroDeCosto.
+
+Tabla CentroDeCosto:
+
+ID_CentroDeCosto: Identificador único del centro de costo.
+Nombre: Nombre del centro de costo.
+ID_Padre: Identificador del centro de costo padre.
+Tabla Presupuesto:
+
+ID_Presupuesto: Identificador único del presupuesto.
+ID_CentroDeCosto: Clave foránea que referencia el ID_CentroDeCosto de la tabla CentroDeCosto.
+ID_RUBRO: Clave foránea que referencia el ID_RUBRO de la tabla Rubro.
+Monto: Monto del presupuesto con precisión de dos decimales.
+Periodo: Período del presupuesto.
+Claves foráneas: Establece relaciones con las tablas CentroDeCosto y Rubro.
+
+Tabla Modificacion:
+
+ID_Modificacion: Identificador único de la modificación.
+ID_PresupuestoOrigen: Clave foránea que referencia el ID_Presupuesto de la tabla Presupuesto.
+ID_PresupuestoDestino: Clave foránea que referencia el ID_Presupuesto de la tabla Presupuesto.
+Monto: Monto de la modificación con precisión de dos decimales.
+Fecha: Fecha de la modificación.
+Claves foráneas: Establece relaciones con la tabla Presupuesto.
+
+Tabla Liquidacion:
+
+ID_Liquidacion: Identificador único de la liquidación.
+ID_Presupuesto: Clave foránea que referencia el ID_Presupuesto de la tabla Presupuesto.
+Monto: Monto de la liquidación con precisión de dos decimales.
+Fecha: Fecha de la liquidación.
+Clave foránea: Establece una relación con la tabla Presupuesto.
+
+Tabla Rubro:
+
+ID_Rubro: Identificador único del rubro.
+Nombre: Nombre del rubro.
+*/
+--***********************CREACION DE LAS TABLAS******************************
+-- Crear la tabla CompraGasto con ID_Permiso como clave foránea
+CREATE TABLE CompraGasto (
+    ID_CompraGasto INT PRIMARY KEY,
+    ID_Permiso INT,
+    Numero_Comprobante VARCHAR2(255),
+    Monto_Real DECIMAL(10, 2),
+    Fecha DATE,
+    FOREIGN KEY (ID_Permiso) REFERENCES Permiso(ID_Permiso)
+);
+
+
+-- Crear la tabla Permiso
+CREATE TABLE Permiso (
+    ID_Permiso INT PRIMARY KEY,
+    ID_Usuario INT,
+    MontoSolicitado DECIMAL(10, 2),
+    Estado VARCHAR2(255),
+    CodigoPermiso VARCHAR2(255),
+    Fecha DATE,
+    ID_Presupuesto INT,
+    FOREIGN KEY (ID_Usuario) REFERENCES Usuario(ID_Usuario),
+    FOREIGN KEY (ID_Presupuesto) REFERENCES Presupuesto(ID_Presupuesto)
+);
+
+-- Crear la tabla Usuario
+CREATE TABLE Usuario (
+    ID_Usuario INT PRIMARY KEY,
+    Nombre VARCHAR2(255) NOT NULL,
+    Rol VARCHAR2(255) NOT NULL,
+    ID_CentroDeCosto INT NOT NULL,
+    FOREIGN KEY (ID_CentroDeCosto) REFERENCES CentroDeCosto(ID_CentroDeCosto)
+);
+-- Crear la tabla CentroDeCosto
+CREATE TABLE CentroDeCosto (
+    ID_CentroDeCosto INT PRIMARY KEY NOT NULL,
+    Nombre VARCHAR2(255) NOT NULL,
+    ID_Padre INT NOT NULL
+);
+
+-- Crear la tabla Presupuesto
+CREATE TABLE Presupuesto (
+    ID_Presupuesto INT PRIMARY KEY NOT NULL,
+    ID_CentroDeCosto INT NOT NULL,
+    ID_RUBRO INT NOT NULL,
+    Monto DECIMAL(10, 2) NOT NULL,
+    Periodo VARCHAR2(255) NOT NULL,
+    FOREIGN KEY (ID_CentroDeCosto) REFERENCES CentroDeCosto(ID_CentroDeCosto),
+    FOREIGN KEY (ID_RUBRO) REFERENCES Rubro(ID_RUBRO)
+);
+-- Crear la tabla Modificacion
+CREATE TABLE Modificacion (
+    ID_Modificacion INT PRIMARY KEY NOT NULL,
+    ID_PresupuestoOrigen INT NOT NULL,
+    ID_PresupuestoDestino INT NOT NULL,
+    Monto DECIMAL(10, 2) NOT NULL,
+    Fecha DATE NOT NULL,
+    FOREIGN KEY (ID_PresupuestoOrigen) REFERENCES Presupuesto(ID_Presupuesto),
+    FOREIGN KEY (ID_PresupuestoDestino) REFERENCES Presupuesto(ID_Presupuesto)
+);
+
+-- Crear la tabla Liquidacion
+CREATE TABLE Liquidacion (
+    ID_Liquidacion INT PRIMARY KEY NOT NULL,
+    ID_Presupuesto INT NOT NULL,
+    Monto DECIMAL(10, 2) NOT NULL,
+    Fecha DATE NOT NULL,
+    FOREIGN KEY (ID_Presupuesto) REFERENCES Presupuesto(ID_Presupuesto)
+);
+
+
+CREATE TABLE Rubro(
+    ID_Rubro INT PRIMARY KEY NOT NULL,
+    Nombre VARCHAR2(255)
+);
+--***********************  INSERTS  ******************************
+
+-- Insertar datos en la tabla Rubro
+INSERT INTO Rubro (ID_Rubro, Nombre) VALUES (1, 'Personal');
+INSERT INTO Rubro (ID_Rubro, Nombre) VALUES (2, 'Materiales de construcción');
+INSERT INTO Rubro (ID_Rubro, Nombre) VALUES (3, 'Equipos y herramientas');
+INSERT INTO Rubro (ID_Rubro, Nombre) VALUES (4, 'Mano de obra especializada');
+INSERT INTO Rubro (ID_Rubro, Nombre) VALUES (5, 'Transporte');
+INSERT INTO Rubro (ID_Rubro, Nombre) VALUES (6, 'Publicidad');
+INSERT INTO Rubro (ID_Rubro, Nombre) VALUES (7, 'Suministros de oficina');
+INSERT INTO Rubro (ID_Rubro, Nombre) VALUES (8, 'Gastos administrativos');
+INSERT INTO Rubro (ID_Rubro, Nombre) VALUES (9, 'Servicios profesionales');
+INSERT INTO Rubro (ID_Rubro, Nombre) VALUES (10, 'Alquiler de instalaciones');
+INSERT INTO Rubro (ID_Rubro, Nombre) VALUES (11, 'Tecnología y software');
+INSERT INTO Rubro (ID_Rubro, Nombre) VALUES (12, 'Capacitación');
+INSERT INTO Rubro (ID_Rubro, Nombre) VALUES (13, 'Seguros');
+INSERT INTO Rubro (ID_Rubro, Nombre) VALUES (14, 'Impuestos');
+INSERT INTO Rubro (ID_Rubro, Nombre) VALUES (15, 'Mantenimiento');
+INSERT INTO Rubro (ID_Rubro, Nombre) VALUES (16, 'Investigación y desarrollo');
+INSERT INTO Rubro (ID_Rubro, Nombre) VALUES (17, 'Viajes y alojamiento');
+INSERT INTO Rubro (ID_Rubro, Nombre) VALUES (18, 'Energía y servicios públicos');
+INSERT INTO Rubro (ID_Rubro, Nombre) VALUES (19, 'Eventos y conferencias');
+INSERT INTO Rubro (ID_Rubro, Nombre) VALUES (20, 'Otros');
+
+-- Insertar datos en la tabla CentroDeCosto
+INSERT INTO CentroDeCosto (ID_CentroDeCosto, Nombre, ID_Padre) VALUES (1, 'Administración', 0);
+INSERT INTO CentroDeCosto (ID_CentroDeCosto, Nombre, ID_Padre) VALUES (2, 'Recursos Humanos', 1);
+INSERT INTO CentroDeCosto (ID_CentroDeCosto, Nombre, ID_Padre) VALUES (3, 'Finanzas', 1);
+INSERT INTO CentroDeCosto (ID_CentroDeCosto, Nombre, ID_Padre) VALUES (4, 'Producción', 0);
+INSERT INTO CentroDeCosto (ID_CentroDeCosto, Nombre, ID_Padre) VALUES (5, 'Ingeniería', 4);
+INSERT INTO CentroDeCosto (ID_CentroDeCosto, Nombre, ID_Padre) VALUES (6, 'Calidad', 4);
+INSERT INTO CentroDeCosto (ID_CentroDeCosto, Nombre, ID_Padre) VALUES (7, 'Ventas', 0);
+INSERT INTO CentroDeCosto (ID_CentroDeCosto, Nombre, ID_Padre) VALUES (8, 'Marketing', 7);
+INSERT INTO CentroDeCosto (ID_CentroDeCosto, Nombre, ID_Padre) VALUES (9, 'Soporte Técnico', 7);
+INSERT INTO CentroDeCosto (ID_CentroDeCosto, Nombre, ID_Padre) VALUES (10, 'Logística', 0);
+INSERT INTO CentroDeCosto (ID_CentroDeCosto, Nombre, ID_Padre) VALUES (11, 'Almacén', 10);
+INSERT INTO CentroDeCosto (ID_CentroDeCosto, Nombre, ID_Padre) VALUES (12, 'Distribución', 10);
+INSERT INTO CentroDeCosto (ID_CentroDeCosto, Nombre, ID_Padre) VALUES (13, 'Proyectos', 0);
+INSERT INTO CentroDeCosto (ID_CentroDeCosto, Nombre, ID_Padre) VALUES (14, 'Desarrollo de Software', 13);
+INSERT INTO CentroDeCosto (ID_CentroDeCosto, Nombre, ID_Padre) VALUES (15, 'Investigación y Desarrollo', 13);
+INSERT INTO CentroDeCosto (ID_CentroDeCosto, Nombre, ID_Padre) VALUES (16, 'Servicios Generales', 0);
+INSERT INTO CentroDeCosto (ID_CentroDeCosto, Nombre, ID_Padre) VALUES (17, 'Mantenimiento', 16);
+INSERT INTO CentroDeCosto (ID_CentroDeCosto, Nombre, ID_Padre) VALUES (18, 'Limpieza', 16);
+INSERT INTO CentroDeCosto (ID_CentroDeCosto, Nombre, ID_Padre) VALUES (19, 'Seguridad', 16);
+INSERT INTO CentroDeCosto (ID_CentroDeCosto, Nombre, ID_Padre) VALUES (20, 'Servicios Externos', 0);
+
+-- Insertar datos en la tabla Presupuesto
+INSERT INTO Presupuesto (ID_Presupuesto, ID_CentroDeCosto, ID_RUBRO, Monto, Periodo) VALUES (1, 1, 1, 10000.00, '2023-01');
+INSERT INTO Presupuesto (ID_Presupuesto, ID_CentroDeCosto, ID_RUBRO, Monto, Periodo) VALUES (2, 2, 2, 5000.00, '2023-01');
+INSERT INTO Presupuesto (ID_Presupuesto, ID_CentroDeCosto, ID_RUBRO, Monto, Periodo) VALUES (3, 4, 3, 8000.00, '2023-01');
+INSERT INTO Presupuesto (ID_Presupuesto, ID_CentroDeCosto, ID_RUBRO, Monto, Periodo) VALUES (4, 5, 4, 12000.00, '2023-01');
+INSERT INTO Presupuesto (ID_Presupuesto, ID_CentroDeCosto, ID_RUBRO, Monto, Periodo) VALUES (5, 7, 5, 3000.00, '2023-01');
+INSERT INTO Presupuesto (ID_Presupuesto, ID_CentroDeCosto, ID_RUBRO, Monto, Periodo) VALUES (6, 8, 6, 6000.00, '2023-01');
+INSERT INTO Presupuesto (ID_Presupuesto, ID_CentroDeCosto, ID_RUBRO, Monto, Periodo) VALUES (7, 10, 7, 4000.00, '2023-01');
+INSERT INTO Presupuesto (ID_Presupuesto, ID_CentroDeCosto, ID_RUBRO, Monto, Periodo) VALUES (8, 11, 8, 7000.00, '2023-01');
+INSERT INTO Presupuesto (ID_Presupuesto, ID_CentroDeCosto, ID_RUBRO, Monto, Periodo) VALUES (9, 13, 9, 9000.00, '2023-01');
+INSERT INTO Presupuesto (ID_Presupuesto, ID_CentroDeCosto, ID_RUBRO, Monto, Periodo) VALUES (10, 14, 10, 15000.00, '2023-01');
+INSERT INTO Presupuesto (ID_Presupuesto, ID_CentroDeCosto, ID_RUBRO, Monto, Periodo) VALUES (11, 16, 11, 2000.00, '2023-01');
+INSERT INTO Presupuesto (ID_Presupuesto, ID_CentroDeCosto, ID_RUBRO, Monto, Periodo) VALUES (12, 17, 12, 10000.00, '2023-01');
+INSERT INTO Presupuesto (ID_Presupuesto, ID_CentroDeCosto, ID_RUBRO, Monto, Periodo) VALUES (13, 19, 13, 8000.00, '2023-01');
+INSERT INTO Presupuesto (ID_Presupuesto, ID_CentroDeCosto, ID_RUBRO, Monto, Periodo) VALUES (14, 20, 14, 6000.00, '2023-01');
+INSERT INTO Presupuesto (ID_Presupuesto, ID_CentroDeCosto, ID_RUBRO, Monto, Periodo) VALUES (15, 1, 15, 12000.00, '2023-02');
+INSERT INTO Presupuesto (ID_Presupuesto, ID_CentroDeCosto, ID_RUBRO, Monto, Periodo) VALUES (16, 2, 16, 5000.00, '2023-02');
+INSERT INTO Presupuesto (ID_Presupuesto, ID_CentroDeCosto, ID_RUBRO, Monto, Periodo) VALUES (17, 4, 17, 7000.00, '2023-02');
+INSERT INTO Presupuesto (ID_Presupuesto, ID_CentroDeCosto, ID_RUBRO, Monto, Periodo) VALUES (18, 5, 18, 15000.00, '2023-02');
+INSERT INTO Presupuesto (ID_Presupuesto, ID_CentroDeCosto, ID_RUBRO, Monto, Periodo) VALUES (19, 7, 19, 4000.00, '2023-02');
+INSERT INTO Presupuesto (ID_Presupuesto, ID_CentroDeCosto, ID_RUBRO, Monto, Periodo) VALUES (20, 8, 20, 9000.00, '2023-02');
+
+-- Insertar datos en la tabla Usuario
+INSERT INTO Usuario (ID_Usuario, Nombre, Rol, ID_CentroDeCosto) VALUES (1, 'Juan Pérez', 'Gerente', 1);
+INSERT INTO Usuario (ID_Usuario, Nombre, Rol, ID_CentroDeCosto) VALUES (2, 'Ana García', 'Contador', 2);
+INSERT INTO Usuario (ID_Usuario, Nombre, Rol, ID_CentroDeCosto) VALUES (3, 'Carlos López', 'Analista de Recursos Humanos', 2);
+INSERT INTO Usuario (ID_Usuario, Nombre, Rol, ID_CentroDeCosto) VALUES (4, 'María Rodríguez', 'Ingeniero de Producción', 4);
+INSERT INTO Usuario (ID_Usuario, Nombre, Rol, ID_CentroDeCosto) VALUES (5, 'Pedro Martínez', 'Ingeniero de Calidad', 4);
+INSERT INTO Usuario (ID_Usuario, Nombre, Rol, ID_CentroDeCosto) VALUES (6, 'Laura Sánchez', 'Ejecutivo de Ventas', 7);
+INSERT INTO Usuario (ID_Usuario, Nombre, Rol, ID_CentroDeCosto) VALUES (7, 'Sergio Ramírez', 'Especialista en Marketing', 7);
+INSERT INTO Usuario (ID_Usuario, Nombre, Rol, ID_CentroDeCosto) VALUES (8, 'Isabel González', 'Soporte Técnico', 9);
+INSERT INTO Usuario (ID_Usuario, Nombre, Rol, ID_CentroDeCosto) VALUES (9, 'Eduardo Fernández', 'Logístico', 10);
+INSERT INTO Usuario (ID_Usuario, Nombre, Rol, ID_CentroDeCosto) VALUES (10, 'Alejandra Ruiz', 'Encargado de Almacén', 11);
+INSERT INTO Usuario (ID_Usuario, Nombre, Rol, ID_CentroDeCosto) VALUES (11, 'Diego Herrera', 'Desarrollador de Software', 14);
+INSERT INTO Usuario (ID_Usuario, Nombre, Rol, ID_CentroDeCosto) VALUES (12, 'Luisa Torres', 'Ingeniero de Investigación y Desarrollo', 15);
+INSERT INTO Usuario (ID_Usuario, Nombre, Rol, ID_CentroDeCosto) VALUES (13, 'Martín Vargas', 'Supervisor de Mantenimiento', 17);
+INSERT INTO Usuario (ID_Usuario, Nombre, Rol, ID_CentroDeCosto) VALUES (14, 'Carmen Núñez', 'Personal de Limpieza', 18);
+INSERT INTO Usuario (ID_Usuario, Nombre, Rol, ID_CentroDeCosto) VALUES (15, 'Raúl Díaz', 'Guardia de Seguridad', 19);
+INSERT INTO Usuario (ID_Usuario, Nombre, Rol, ID_CentroDeCosto) VALUES (16, 'Patricia Mendoza', 'Analista de Sistemas', 20);
+INSERT INTO Usuario (ID_Usuario, Nombre, Rol, ID_CentroDeCosto) VALUES (17, 'Jorge Gómez', 'Coordinador de Proyectos', 13);
+INSERT INTO Usuario (ID_Usuario, Nombre, Rol, ID_CentroDeCosto) VALUES (18, 'Monica Silva', 'Analista de Proyectos', 13);
+INSERT INTO Usuario (ID_Usuario, Nombre, Rol, ID_CentroDeCosto) VALUES (19, 'Héctor Castro', 'Ingeniero de Servicios Generales', 16);
+INSERT INTO Usuario (ID_Usuario, Nombre, Rol, ID_CentroDeCosto) VALUES (20, 'Lucía Ortiz', 'Especialista en Eventos', 0);
+
+
+-- Insertar datos en la tabla Liquidacion
+
+
+INSERT INTO Liquidacion (ID_Liquidacion, ID_Presupuesto, Monto, Fecha) VALUES (1, 1, 8000.00, TO_DATE('2023-02-01', 'YYYY-MM-DD'));
+INSERT INTO Liquidacion (ID_Liquidacion, ID_Presupuesto, Monto, Fecha) VALUES (2, 2, 4000.00, TO_DATE('2023-02-06', 'YYYY-MM-DD'));
+INSERT INTO Liquidacion (ID_Liquidacion, ID_Presupuesto, Monto, Fecha) VALUES (3, 3, 6000.00, TO_DATE('2023-02-11', 'YYYY-MM-DD'));
+INSERT INTO Liquidacion (ID_Liquidacion, ID_Presupuesto, Monto, Fecha) VALUES (4, 4, 9000.00, TO_DATE('2023-01-27', 'YYYY-MM-DD'));
+INSERT INTO Liquidacion (ID_Liquidacion, ID_Presupuesto, Monto, Fecha) VALUES (5, 5, 3000.00, TO_DATE('2023-01-22', 'YYYY-MM-DD'));
+INSERT INTO Liquidacion (ID_Liquidacion, ID_Presupuesto, Monto, Fecha) VALUES (6, 6, 5000.00, TO_DATE('2023-03-01', 'YYYY-MM-DD'));
+INSERT INTO Liquidacion (ID_Liquidacion, ID_Presupuesto, Monto, Fecha) VALUES (7, 7, 7000.00, TO_DATE('2023-03-06', 'YYYY-MM-DD'));
+INSERT INTO Liquidacion (ID_Liquidacion, ID_Presupuesto, Monto, Fecha) VALUES (8, 8, 10000.00, TO_DATE('2023-03-11', 'YYYY-MM-DD'));
+INSERT INTO Liquidacion (ID_Liquidacion, ID_Presupuesto, Monto, Fecha) VALUES (9, 9, 12000.00, TO_DATE('2023-02-26', 'YYYY-MM-DD'));
+INSERT INTO Liquidacion (ID_Liquidacion, ID_Presupuesto, Monto, Fecha) VALUES (10, 10, 4000.00, TO_DATE('2023-02-21', 'YYYY-MM-DD'));
+INSERT INTO Liquidacion (ID_Liquidacion, ID_Presupuesto, Monto, Fecha) VALUES (11, 11, 6000.00, TO_DATE('2023-04-01', 'YYYY-MM-DD'));
+INSERT INTO Liquidacion (ID_Liquidacion, ID_Presupuesto, Monto, Fecha) VALUES (12, 12, 8000.00, TO_DATE('2023-04-06', 'YYYY-MM-DD'));
+INSERT INTO Liquidacion (ID_Liquidacion, ID_Presupuesto, Monto, Fecha) VALUES (13, 13, 11000.00, TO_DATE('2023-04-11', 'YYYY-MM-DD'));
+INSERT INTO Liquidacion (ID_Liquidacion, ID_Presupuesto, Monto, Fecha) VALUES (14, 14, 15000.00, TO_DATE('2023-03-27', 'YYYY-MM-DD'));
+INSERT INTO Liquidacion (ID_Liquidacion, ID_Presupuesto, Monto, Fecha) VALUES (15, 15, 5000.00, TO_DATE('2023-03-22', 'YYYY-MM-DD'));
+INSERT INTO Liquidacion (ID_Liquidacion, ID_Presupuesto, Monto, Fecha) VALUES (16, 16, 7000.00, TO_DATE('2023-05-01', 'YYYY-MM-DD'));
+INSERT INTO Liquidacion (ID_Liquidacion, ID_Presupuesto, Monto, Fecha) VALUES (17, 17, 9000.00, TO_DATE('2023-05-06', 'YYYY-MM-DD'));
+INSERT INTO Liquidacion (ID_Liquidacion, ID_Presupuesto, Monto, Fecha) VALUES (18, 18, 12000.00, TO_DATE('2023-05-11', 'YYYY-MM-DD'));
+INSERT INTO Liquidacion (ID_Liquidacion, ID_Presupuesto, Monto, Fecha) VALUES (19, 19, 15000.00, TO_DATE('2023-04-26', 'YYYY-MM-DD'));
+INSERT INTO Liquidacion (ID_Liquidacion, ID_Presupuesto, Monto, Fecha) VALUES (20, 20, 6000.00, TO_DATE('2023-04-21', 'YYYY-MM-DD'));
+-- Insertar datos en la tabla Modificacion
+INSERT INTO Modificacion (ID_Modificacion, ID_PresupuestoOrigen, ID_PresupuestoDestino, Monto, Fecha) VALUES (1, 1, 2, 2000.00, TO_DATE('2023-01-15', 'YYYY-MM-DD'));
+INSERT INTO Modificacion (ID_Modificacion, ID_PresupuestoOrigen, ID_PresupuestoDestino, Monto, Fecha) VALUES (2, 3, 4, 3000.00, TO_DATE('2023-01-20', 'YYYY-MM-DD'));
+INSERT INTO Modificacion (ID_Modificacion, ID_PresupuestoOrigen, ID_PresupuestoDestino, Monto, Fecha) VALUES (3, 5, 6, 4000.00, TO_DATE('2023-01-25', 'YYYY-MM-DD'));
+INSERT INTO Modificacion (ID_Modificacion, ID_PresupuestoOrigen, ID_PresupuestoDestino, Monto, Fecha) VALUES (4, 7, 8, 5000.00, TO_DATE('2023-01-10', 'YYYY-MM-DD'));
+INSERT INTO Modificacion (ID_Modificacion, ID_PresupuestoOrigen, ID_PresupuestoDestino, Monto, Fecha) VALUES (5, 9, 10, 6000.00, TO_DATE('2023-01-05', 'YYYY-MM-DD'));
+INSERT INTO Modificacion (ID_Modificacion, ID_PresupuestoOrigen, ID_PresupuestoDestino, Monto, Fecha) VALUES (6, 11, 12, 7000.00, TO_DATE('2023-02-15', 'YYYY-MM-DD'));
+INSERT INTO Modificacion (ID_Modificacion, ID_PresupuestoOrigen, ID_PresupuestoDestino, Monto, Fecha) VALUES (7, 13, 14, 8000.00, TO_DATE('2023-02-20', 'YYYY-MM-DD'));
+INSERT INTO Modificacion (ID_Modificacion, ID_PresupuestoOrigen, ID_PresupuestoDestino, Monto, Fecha) VALUES (8, 15, 16, 9000.00, TO_DATE('2023-02-25', 'YYYY-MM-DD'));
+INSERT INTO Modificacion (ID_Modificacion, ID_PresupuestoOrigen, ID_PresupuestoDestino, Monto, Fecha) VALUES (9, 17, 18, 10000.00, TO_DATE('2023-02-10', 'YYYY-MM-DD'));
+INSERT INTO Modificacion (ID_Modificacion, ID_PresupuestoOrigen, ID_PresupuestoDestino, Monto, Fecha) VALUES (10, 19, 20, 11000.00, TO_DATE('2023-02-05', 'YYYY-MM-DD'));
+INSERT INTO Modificacion (ID_Modificacion, ID_PresupuestoOrigen, ID_PresupuestoDestino, Monto, Fecha) VALUES (11, 1, 3, 12000.00, TO_DATE('2023-03-15', 'YYYY-MM-DD'));
+INSERT INTO Modificacion (ID_Modificacion, ID_PresupuestoOrigen, ID_PresupuestoDestino, Monto, Fecha) VALUES (12, 2, 4, 13000.00, TO_DATE('2023-03-20', 'YYYY-MM-DD'));
+INSERT INTO Modificacion (ID_Modificacion, ID_PresupuestoOrigen, ID_PresupuestoDestino, Monto, Fecha) VALUES (13, 3, 5, 14000.00, TO_DATE('2023-03-25', 'YYYY-MM-DD'));
+INSERT INTO Modificacion (ID_Modificacion, ID_PresupuestoOrigen, ID_PresupuestoDestino, Monto, Fecha) VALUES (14, 4, 6, 15000.00, TO_DATE('2023-03-10', 'YYYY-MM-DD'));
+INSERT INTO Modificacion (ID_Modificacion, ID_PresupuestoOrigen, ID_PresupuestoDestino, Monto, Fecha) VALUES (15, 5, 7, 16000.00, TO_DATE('2023-03-05', 'YYYY-MM-DD'));
+INSERT INTO Modificacion (ID_Modificacion, ID_PresupuestoOrigen, ID_PresupuestoDestino, Monto, Fecha) VALUES (16, 6, 8, 17000.00, TO_DATE('2023-04-15', 'YYYY-MM-DD'));
+INSERT INTO Modificacion (ID_Modificacion, ID_PresupuestoOrigen, ID_PresupuestoDestino, Monto, Fecha) VALUES (17, 7, 9, 18000.00, TO_DATE('2023-04-20', 'YYYY-MM-DD'));
+INSERT INTO Modificacion (ID_Modificacion, ID_PresupuestoOrigen, ID_PresupuestoDestino, Monto, Fecha) VALUES (18, 8, 10, 19000.00, TO_DATE('2023-04-25', 'YYYY-MM-DD'));
+INSERT INTO Modificacion (ID_Modificacion, ID_PresupuestoOrigen, ID_PresupuestoDestino, Monto, Fecha) VALUES (19, 9, 11, 20000.00, TO_DATE('2023-04-10', 'YYYY-MM-DD'));
+INSERT INTO Modificacion (ID_Modificacion, ID_PresupuestoOrigen, ID_PresupuestoDestino, Monto, Fecha) VALUES (20, 10, 12, 21000.00, TO_DATE('2023-04-05', 'YYYY-MM-DD'));
+-- Insertar datos en la tabla Permiso
+INSERT INTO Permiso (ID_Permiso, ID_Usuario, MontoSolicitado, Estado, CodigoPermiso, Fecha, ID_Presupuesto) VALUES (1, 1, 5000.00, 'Aprobado', 'ABC123', TO_DATE('2023-01-15', 'YYYY-MM-DD'), 1);
+INSERT INTO Permiso (ID_Permiso, ID_Usuario, MontoSolicitado, Estado, CodigoPermiso, Fecha, ID_Presupuesto) VALUES (2, 2, 3000.00, 'Pendiente', 'DEF456', TO_DATE('2023-01-20', 'YYYY-MM-DD'), 2);
+INSERT INTO Permiso (ID_Permiso, ID_Usuario, MontoSolicitado, Estado, CodigoPermiso, Fecha, ID_Presupuesto) VALUES (3, 3, 8000.00, 'Aprobado', 'GHI789', TO_DATE('2023-01-25', 'YYYY-MM-DD'), 3);
+INSERT INTO Permiso (ID_Permiso, ID_Usuario, MontoSolicitado, Estado, CodigoPermiso, Fecha, ID_Presupuesto) VALUES (4, 4, 12000.00, 'Rechazado', 'JKL012', TO_DATE('2023-01-10', 'YYYY-MM-DD'), 4);
+INSERT INTO Permiso (ID_Permiso, ID_Usuario, MontoSolicitado, Estado, CodigoPermiso, Fecha, ID_Presupuesto) VALUES (5, 5, 6000.00, 'Aprobado', 'MNO345', TO_DATE('2023-01-05', 'YYYY-MM-DD'), 5);
+INSERT INTO Permiso (ID_Permiso, ID_Usuario, MontoSolicitado, Estado, CodigoPermiso, Fecha, ID_Presupuesto) VALUES (6, 6, 4000.00, 'Pendiente', 'PQR678', TO_DATE('2023-02-15', 'YYYY-MM-DD'), 6);
+INSERT INTO Permiso (ID_Permiso, ID_Usuario, MontoSolicitado, Estado, CodigoPermiso, Fecha, ID_Presupuesto) VALUES (7, 7, 7000.00, 'Rechazado', 'STU901', TO_DATE('2023-02-20', 'YYYY-MM-DD'), 7);
+INSERT INTO Permiso (ID_Permiso, ID_Usuario, MontoSolicitado, Estado, CodigoPermiso, Fecha, ID_Presupuesto) VALUES (8, 8, 10000.00, 'Aprobado', 'VWX234', TO_DATE('2023-02-25', 'YYYY-MM-DD'), 8);
+INSERT INTO Permiso (ID_Permiso, ID_Usuario, MontoSolicitado, Estado, CodigoPermiso, Fecha, ID_Presupuesto) VALUES (9, 9, 9000.00, 'Pendiente', 'YZA567', TO_DATE('2023-02-10', 'YYYY-MM-DD'), 9);
+INSERT INTO Permiso (ID_Permiso, ID_Usuario, MontoSolicitado, Estado, CodigoPermiso, Fecha, ID_Presupuesto) VALUES (10, 10, 15000.00, 'Aprobado', 'BCD890', TO_DATE('2023-02-05', 'YYYY-MM-DD'), 10);
+INSERT INTO Permiso (ID_Permiso, ID_Usuario, MontoSolicitado, Estado, CodigoPermiso, Fecha, ID_Presupuesto) VALUES (11, 11, 2000.00, 'Pendiente', 'EFG123', TO_DATE('2023-03-15', 'YYYY-MM-DD'), 11);
+INSERT INTO Permiso (ID_Permiso, ID_Usuario, MontoSolicitado, Estado, CodigoPermiso, Fecha, ID_Presupuesto) VALUES (12, 12, 10000.00, 'Rechazado', 'HIJ456', TO_DATE('2023-03-20', 'YYYY-MM-DD'), 12);
+INSERT INTO Permiso (ID_Permiso, ID_Usuario, MontoSolicitado, Estado, CodigoPermiso, Fecha, ID_Presupuesto) VALUES (13, 13, 8000.00, 'Aprobado', 'KLM789', TO_DATE('2023-03-25', 'YYYY-MM-DD'), 13);
+INSERT INTO Permiso (ID_Permiso, ID_Usuario, MontoSolicitado, Estado, CodigoPermiso, Fecha, ID_Presupuesto) VALUES (14, 14, 6000.00, 'Pendiente', 'NOP012', TO_DATE('2023-03-10', 'YYYY-MM-DD'), 14);
+INSERT INTO Permiso (ID_Permiso, ID_Usuario, MontoSolicitado, Estado, CodigoPermiso, Fecha, ID_Presupuesto) VALUES (15, 15, 12000.00, 'Aprobado', 'QRS345', TO_DATE('2023-03-05', 'YYYY-MM-DD'), 15);
+INSERT INTO Permiso (ID_Permiso, ID_Usuario, MontoSolicitado, Estado, CodigoPermiso, Fecha, ID_Presupuesto) VALUES (16, 16, 5000.00, 'Rechazado', 'TUV678', TO_DATE('2023-04-15', 'YYYY-MM-DD'), 16);
+INSERT INTO Permiso (ID_Permiso, ID_Usuario, MontoSolicitado, Estado, CodigoPermiso, Fecha, ID_Presupuesto) VALUES (17, 17, 7000.00, 'Aprobado', 'WXY901', TO_DATE('2023-04-20', 'YYYY-MM-DD'), 17);
+INSERT INTO Permiso (ID_Permiso, ID_Usuario, MontoSolicitado, Estado, CodigoPermiso, Fecha, ID_Presupuesto) VALUES (18, 18, 9000.00, 'Pendiente', 'ZAB234', TO_DATE('2023-04-25', 'YYYY-MM-DD'), 18);
+
+-- Insertar datos en la tabla CompraGasto
+INSERT INTO CompraGasto (ID_CompraGasto, ID_Permiso, Numero_Comprobante, Monto_Real, Fecha) VALUES (1, 1, 'C12345', 2000.00, TO_DATE('2023-01-15', 'YYYY-MM-DD'));
+INSERT INTO CompraGasto (ID_CompraGasto, ID_Permiso, Numero_Comprobante, Monto_Real, Fecha) VALUES (2, 2, 'C67890', 1500.00, TO_DATE('2023-01-20', 'YYYY-MM-DD'));
+INSERT INTO CompraGasto (ID_CompraGasto, ID_Permiso, Numero_Comprobante, Monto_Real, Fecha) VALUES (3, 3, 'C23456', 3000.00, TO_DATE('2023-01-25', 'YYYY-MM-DD'));
+INSERT INTO CompraGasto (ID_CompraGasto, ID_Permiso, Numero_Comprobante, Monto_Real, Fecha) VALUES (4, 4, 'C78901', 4500.00, TO_DATE('2023-01-10', 'YYYY-MM-DD'));
+INSERT INTO CompraGasto (ID_CompraGasto, ID_Permiso, Numero_Comprobante, Monto_Real, Fecha) VALUES (5, 5, 'C34567', 6000.00, TO_DATE('2023-01-05', 'YYYY-MM-DD'));
+INSERT INTO CompraGasto (ID_CompraGasto, ID_Permiso, Numero_Comprobante, Monto_Real, Fecha) VALUES (6, 6, 'C89012', 2500.00, TO_DATE('2023-02-15', 'YYYY-MM-DD'));
+INSERT INTO CompraGasto (ID_CompraGasto, ID_Permiso, Numero_Comprobante, Monto_Real, Fecha) VALUES (7, 7, 'C45678', 4000.00, TO_DATE('2023-02-20', 'YYYY-MM-DD'));
+INSERT INTO CompraGasto (ID_CompraGasto, ID_Permiso, Numero_Comprobante, Monto_Real, Fecha) VALUES (8, 8, 'C01234', 3500.00, TO_DATE('2023-02-25', 'YYYY-MM-DD'));
+INSERT INTO CompraGasto (ID_CompraGasto, ID_Permiso, Numero_Comprobante, Monto_Real, Fecha) VALUES (9, 9, 'C56789', 5000.00, TO_DATE('2023-02-10', 'YYYY-MM-DD'));
+INSERT INTO CompraGasto (ID_CompraGasto, ID_Permiso, Numero_Comprobante, Monto_Real, Fecha) VALUES (10, 10, 'C12345', 7000.00, TO_DATE('2023-02-05', 'YYYY-MM-DD'));
+INSERT INTO CompraGasto (ID_CompraGasto, ID_Permiso, Numero_Comprobante, Monto_Real, Fecha) VALUES (11, 11, 'C67890', 8000.00, TO_DATE('2023-03-15', 'YYYY-MM-DD'));
+INSERT INTO CompraGasto (ID_CompraGasto, ID_Permiso, Numero_Comprobante, Monto_Real, Fecha) VALUES (12, 12, 'C23456', 4500.00, TO_DATE('2023-03-20', 'YYYY-MM-DD'));
+INSERT INTO CompraGasto (ID_CompraGasto, ID_Permiso, Numero_Comprobante, Monto_Real, Fecha) VALUES (13, 13, 'C78901', 6000.00, TO_DATE('2023-03-25', 'YYYY-MM-DD'));
+INSERT INTO CompraGasto (ID_CompraGasto, ID_Permiso, Numero_Comprobante, Monto_Real, Fecha) VALUES (14, 14, 'C34567', 3000.00, TO_DATE('2023-03-10', 'YYYY-MM-DD'));
+INSERT INTO CompraGasto (ID_CompraGasto, ID_Permiso, Numero_Comprobante, Monto_Real, Fecha) VALUES (15, 15, 'C89012', 5500.00, TO_DATE('2023-03-05', 'YYYY-MM-DD'));
+
+DROP TABLE LIQUIDACION;
+-- Seleccionar todos los registros de la tabla Usuario
+SELECT * FROM CENTRODECOSTO;
+SELECT * FROM COMPRAGASTO;
+SELECT * FROM LIQUIDACION;
+SELECT * FROM MODIFICACION;
+SELECT * FROM PERMISO;
+SELECT * FROM PRESUPUESTO;
+SELECT * FROM RUBRO;
+SELECT * FROM USUARIO;
+
+--objetos pl sql 
+
+-- Creación de tabla de presupuesto
+CREATE TABLE Presupuesto (
+    ID_Presupuesto INT PRIMARY KEY,
+    Nombre VARCHAR2(255),
+    Monto DECIMAL(10, 2),
+    FechaInicio DATE,
+    FechaFin DATE
+);
+
+-- Creación de tabla de modificaciones
+CREATE TABLE Modificacion (
+    ID_Modificacion INT PRIMARY KEY,
+    ID_Presupuesto INT,
+    TipoModificacion VARCHAR2(50),
+    FechaModificacion DATE,
+    FOREIGN KEY (ID_Presupuesto) REFERENCES Presupuesto(ID_Presupuesto)
+);
+
+-- Procedimiento para crear un nuevo presupuesto
+CREATE OR REPLACE PROCEDURE CrearPresupuesto (
+    p_ID_Presupuesto INT,
+    p_Nombre VARCHAR2,
+    p_Monto DECIMAL,
+    p_FechaInicio DATE,
+    p_FechaFin DATE
+)
+IS
+BEGIN
+    INSERT INTO Presupuesto (ID_Presupuesto, Nombre, Monto, FechaInicio, FechaFin)
+    VALUES (p_ID_Presupuesto, p_Nombre, p_Monto, p_FechaInicio, p_FechaFin);
+    
+    INSERT INTO Modificacion (ID_Modificacion, ID_Presupuesto, TipoModificacion, FechaModificacion)
+    VALUES (/* generación automática de ID */, p_ID_Presupuesto, 'Creación', SYSDATE);
+    
+    COMMIT;
+END;
+
+-- Procedimiento para actualizar un presupuesto existente
+CREATE OR REPLACE PROCEDURE ActualizarPresupuesto (
+    p_ID_Presupuesto INT,
+    p_NuevoMonto DECIMAL,
+    p_NuevaFechaFin DATE
+)
+IS
+BEGIN
+    UPDATE Presupuesto
+    SET Monto = p_NuevoMonto, FechaFin = p_NuevaFechaFin
+    WHERE ID_Presupuesto = p_ID_Presupuesto;
+    
+    INSERT INTO Modificacion (ID_Modificacion, ID_Presupuesto, TipoModificacion, FechaModificacion)
+    VALUES (/* generación automática de ID */, p_ID_Presupuesto, 'Actualización', SYSDATE);
+    
+    COMMIT;
+END;
+
+-- Procedimiento para eliminar un presupuesto
+CREATE OR REPLACE PROCEDURE EliminarPresupuesto (
+    p_ID_Presupuesto INT
+)
+IS
+BEGIN
+    DELETE FROM Presupuesto
+    WHERE ID_Presupuesto = p_ID_Presupuesto;
+    
+    INSERT INTO Modificacion (ID_Modificacion, ID_Presupuesto, TipoModificacion, FechaModificacion)
+    VALUES (/* generación automática de ID */, p_ID_Presupuesto, 'Eliminación', SYSDATE);
+    
+    COMMIT;
+END;
+
+-- Función para obtener el total del presupuesto disponible
+CREATE OR REPLACE FUNCTION ObtenerTotalPresupuesto RETURN DECIMAL
+IS
+    totalPresupuesto DECIMAL(10, 2);
+BEGIN
+    SELECT SUM(Monto) INTO totalPresupuesto FROM Presupuesto;
+    RETURN totalPresupuesto;
+END;
+
+-- Trigger para registrar la fecha de creación de un presupuesto
+CREATE OR REPLACE TRIGGER Presupuesto_BI
+BEFORE INSERT ON Presupuesto
+FOR EACH ROW
+BEGIN
+    :NEW.FechaInicio := SYSDATE;
+END;
+
+-- Trigger para registrar las modificaciones en un presupuesto
+CREATE OR REPLACE TRIGGER Presupuesto_BU
+BEFORE UPDATE ON Presupuesto
+FOR EACH ROW
+BEGIN
+    INSERT INTO Modificacion (ID_Modificacion, ID_Presupuesto, TipoModificacion, FechaModificacion)
+    VALUES (/* generación automática de ID */, :OLD.ID_Presupuesto, 'Modificación', SYSDATE);
+END;
+
+
+-- Diccionario de datos 
+
+-- Creación de tablas
+CREATE TABLE Presupuesto (
+    ID_Presupuesto INT PRIMARY KEY,
+    Nombre VARCHAR2(255),
+    Monto DECIMAL(10, 2),
+    FechaInicio DATE,
+    FechaFin DATE
+);
+
+CREATE TABLE Modificacion (
+    ID_Modificacion INT PRIMARY KEY,
+    ID_Presupuesto INT,
+    TipoModificacion VARCHAR2(50),
+    FechaModificacion DATE,
+    FOREIGN KEY (ID_Presupuesto) REFERENCES Presupuesto(ID_Presupuesto)
+);
+
+-- Procedimientos almacenados
+CREATE OR REPLACE PROCEDURE CrearPresupuesto (
+    p_ID_Presupuesto IN Presupuesto.ID_Presupuesto%TYPE,
+    p_Nombre IN Presupuesto.Nombre%TYPE,
+    p_Monto IN Presupuesto.Monto%TYPE,
+    p_FechaInicio IN Presupuesto.FechaInicio%TYPE,
+    p_FechaFin IN Presupuesto.FechaFin%TYPE
+)
+IS
+BEGIN
+    INSERT INTO Presupuesto (ID_Presupuesto, Nombre, Monto, FechaInicio, FechaFin)
+    VALUES (p_ID_Presupuesto, p_Nombre, p_Monto, p_FechaInicio, p_FechaFin);
+END;
+
+CREATE OR REPLACE PROCEDURE ActualizarPresupuesto (
+    p_ID_Presupuesto IN Presupuesto.ID_Presupuesto%TYPE,
+    p_NuevoMonto IN Presupuesto.Monto%TYPE,
+    p_NuevaFechaFin IN Presupuesto.FechaFin%TYPE
+)
+IS
+BEGIN
+    UPDATE Presupuesto
+    SET Monto = p_NuevoMonto,
+        FechaFin = p_NuevaFechaFin
+    WHERE ID_Presupuesto = p_ID_Presupuesto;
+END;
+
+CREATE OR REPLACE PROCEDURE EliminarPresupuesto (
+    p_ID_Presupuesto IN Presupuesto.ID_Presupuesto%TYPE
+)
+IS
+BEGIN
+    DELETE FROM Presupuesto
+    WHERE ID_Presupuesto = p_ID_Presupuesto;
+END;
+
+-- Funciones
+CREATE OR REPLACE FUNCTION ObtenerTotalPresupuesto
+RETURN DECIMAL
+IS
+    totalPresupuesto DECIMAL(10, 2);
+BEGIN
+    SELECT SUM(Monto) INTO totalPresupuesto FROM Presupuesto;
+    RETURN totalPresupuesto;
+END;
+
+-- Desencadenadores (Triggers)
+CREATE OR REPLACE TRIGGER Presupuesto_BI
+BEFORE INSERT ON Presupuesto
+FOR EACH ROW
+BEGIN
+    :NEW.FechaInicio := SYSDATE;
+END;
+
+CREATE OR REPLACE TRIGGER Presupuesto_BU
+BEFORE UPDATE ON Presupuesto
+FOR EACH ROW
+BEGIN
+    INSERT INTO Modificacion (ID_Modificacion, ID_Presupuesto, TipoModificacion, FechaModificacion)
+    VALUES (Modificacion_SEQ.NEXTVAL, :OLD.ID_Presupuesto, 'Actualización', SYSDATE);
+END;
+
+-- Vistas
+CREATE OR REPLACE VIEW VistaPresupuestoDetallado AS
+SELECT * FROM Presupuesto;
