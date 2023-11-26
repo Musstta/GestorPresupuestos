@@ -73,8 +73,8 @@ def delete_rubro(id_rubro):
 # Ejemplos de Funcionalidad del CRUD
 
 # Ejemplos 1
-# create_rubro(1, 'Rubro1')
-# create_rubro(2, 'Rubro2')
+# create_rubro(21, 'Rubro1')
+# create_rubro(223, 'Rubro2')
 # read_rubros()
 
 # Ejemplo 2

@@ -569,3 +569,303 @@ END;
 -- Vistas
 CREATE OR REPLACE VIEW VistaPresupuestoDetallado AS
 SELECT * FROM Presupuesto;
+-- Crear la tabla CompraGasto con ID_Permiso como clave foránea
+CREATE TABLE CompraGasto (
+    ID_CompraGasto INT PRIMARY KEY,
+    ID_Permiso INT,
+    Numero_Comprobante VARCHAR2(255),
+    Monto_Real DECIMAL(10, 2),
+    Fecha DATE,
+    FOREIGN KEY (ID_Permiso) REFERENCES Permiso(ID_Permiso)
+);
+
+-- Crear la tabla Permiso
+CREATE TABLE Permiso (
+    ID_Permiso INT PRIMARY KEY,
+    ID_Usuario INT,
+    MontoSolicitado DECIMAL(10, 2),
+    Estado VARCHAR2(255),
+    CodigoPermiso VARCHAR2(255),
+    Fecha DATE,
+    ID_Presupuesto INT,
+    FOREIGN KEY (ID_Usuario) REFERENCES Usuario(ID_Usuario),
+    FOREIGN KEY (ID_Presupuesto) REFERENCES Presupuesto(ID_Presupuesto)
+);
+
+-- Crear la tabla Usuario
+CREATE TABLE Usuario (
+    ID_Usuario INT PRIMARY KEY,
+    Nombre VARCHAR2(255) NOT NULL,
+    Rol VARCHAR2(255) NOT NULL,
+    ID_CentroDeCosto INT NOT NULL,
+    FOREIGN KEY (ID_CentroDeCosto) REFERENCES CentroDeCosto(ID_CentroDeCosto)
+);
+
+-- Crear la tabla CentroDeCosto
+CREATE TABLE CentroDeCosto (
+    ID_CentroDeCosto INT PRIMARY KEY NOT NULL,
+    Nombre VARCHAR2(255) NOT NULL,
+    ID_Padre INT NOT NULL
+);
+
+-- Crear la tabla Presupuesto
+CREATE TABLE Presupuesto (
+    ID_Presupuesto INT PRIMARY KEY NOT NULL,
+    ID_CentroDeCosto INT NOT NULL,
+    ID_RUBRO INT NOT NULL,
+    Monto DECIMAL(10, 2) NOT NULL,
+    Periodo VARCHAR2(255) NOT NULL,
+    FOREIGN KEY (ID_CentroDeCosto) REFERENCES CentroDeCosto(ID_CentroDeCosto),
+    FOREIGN KEY (ID_RUBRO) REFERENCES Rubro(ID_RUBRO)
+);
+
+-- Crear la tabla Modificacion
+CREATE TABLE Modificacion (
+    ID_Modificacion INT PRIMARY KEY NOT NULL,
+    ID_PresupuestoOrigen INT NOT NULL,
+    ID_PresupuestoDestino INT NOT NULL,
+    Monto DECIMAL(10, 2) NOT NULL,
+    Fecha DATE NOT NULL,
+    FOREIGN KEY (ID_PresupuestoOrigen) REFERENCES Presupuesto(ID_Presupuesto),
+    FOREIGN KEY (ID_PresupuestoDestino) REFERENCES Presupuesto(ID_Presupuesto)
+);
+
+-- Crear la tabla Liquidacion
+CREATE TABLE Liquidacion (
+    ID_Liquidacion INT PRIMARY KEY NOT NULL,
+    ID_Presupuesto INT NOT NULL,
+    Monto DECIMAL(10, 2) NOT NULL,
+    Fecha DATE NOT NULL,
+    FOREIGN KEY (ID_Presupuesto) REFERENCES Presupuesto(ID_Presupuesto)
+);
+
+-- Crear tabla Rubros
+CREATE TABLE Rubro(
+    ID_Rubro INT PRIMARY KEY NOT NULL,
+    Nombre VARCHAR2(255)
+);
+
+-- A partir de aca van los procedimientos almacenados
+
+CREATE OR REPLACE PROCEDURE InsertarCompraGasto (
+    p_ID_CompraGasto IN CompraGasto.ID_CompraGasto%TYPE,
+    p_ID_Permiso IN CompraGasto.ID_Permiso%TYPE,
+    p_Numero_Comprobante IN CompraGasto.Numero_Comprobante%TYPE,
+    p_Monto_Real IN CompraGasto.Monto_Real%TYPE,
+    p_Fecha IN CompraGasto.Fecha%TYPE)
+IS
+BEGIN
+    INSERT INTO CompraGasto (ID_CompraGasto, ID_Permiso, Numero_Comprobante, Monto_Real, Fecha)
+    VALUES (p_ID_CompraGasto, p_ID_Permiso, p_Numero_Comprobante, p_Monto_Real, p_Fecha);
+END;
+
+CREATE OR REPLACE PROCEDURE ActualizarCompraGasto (
+    p_ID_CompraGasto IN CompraGasto.ID_CompraGasto%TYPE,
+    p_ID_Permiso IN CompraGasto.ID_Permiso%TYPE,
+    p_Numero_Comprobante IN CompraGasto.Numero_Comprobante%TYPE,
+    p_Monto_Real IN CompraGasto.Monto_Real%TYPE,
+    p_Fecha IN CompraGasto.Fecha%TYPE)
+IS
+BEGIN
+    UPDATE CompraGasto
+    SET ID_Permiso = p_ID_Permiso,
+        Numero_Comprobante = p_Numero_Comprobante,
+        Monto_Real = p_Monto_Real,
+        Fecha = p_Fecha
+    WHERE ID_CompraGasto = p_ID_CompraGasto;
+END;
+
+CREATE OR REPLACE PROCEDURE EliminarCompraGasto (
+    p_ID_CompraGasto IN CompraGasto.ID_CompraGasto%TYPE)
+IS
+BEGIN
+    DELETE FROM CompraGasto
+    WHERE ID_CompraGasto = p_ID_CompraGasto;
+END;
+
+CREATE OR REPLACE PROCEDURE InsertarPermiso (
+    p_ID_Permiso IN Permiso.ID_Permiso%TYPE,
+    p_ID_Usuario IN Permiso.ID_Usuario%TYPE,
+    p_MontoSolicitado IN Permiso.MontoSolicitado%TYPE,
+    p_Estado IN Permiso.Estado%TYPE,
+    p_CodigoPermiso IN Permiso.CodigoPermiso%TYPE,
+    p_Fecha IN Permiso.Fecha%TYPE,
+    p_ID_Presupuesto IN Permiso.ID_Presupuesto%TYPE)
+IS
+BEGIN
+    INSERT INTO Permiso (ID_Permiso, ID_Usuario, MontoSolicitado, Estado, CodigoPermiso, Fecha, ID_Presupuesto)
+    VALUES (p_ID_Permiso, p_ID_Usuario, p_MontoSolicitado, p_Estado, p_CodigoPermiso, p_Fecha, p_ID_Presupuesto);
+END;
+
+CREATE OR REPLACE PROCEDURE ActualizarPermiso (
+    p_ID_Permiso IN Permiso.ID_Permiso%TYPE,
+    p_ID_Usuario IN Permiso.ID_Usuario%TYPE,
+    p_MontoSolicitado IN Permiso.MontoSolicitado%TYPE,
+    p_Estado IN Permiso.Estado%TYPE,
+    p_CodigoPermiso IN Permiso.CodigoPermiso%TYPE,
+    p_Fecha IN Permiso.Fecha%TYPE,
+    p_ID_Presupuesto IN Permiso.ID_Presupuesto%TYPE)
+IS
+BEGIN
+    UPDATE Permiso
+    SET ID_Usuario = p_ID_Usuario,
+        MontoSolicitado = p_MontoSolicitado,
+        Estado = p_Estado,
+        CodigoPermiso = p_CodigoPermiso,
+        Fecha = p_Fecha,
+        ID_Presupuesto = p_ID_Presupuesto
+    WHERE ID_Permiso = p_ID_Permiso;
+END;
+
+CREATE OR REPLACE PROCEDURE EliminarPermiso (
+    p_ID_Permiso IN Permiso.ID_Permiso%TYPE)
+IS
+BEGIN
+    DELETE FROM Permiso
+    WHERE ID_Permiso = p_ID_Permiso;
+END;
+
+-- A partir de aca van las vistas
+
+CREATE OR REPLACE VIEW VistaDetalleGastos AS
+SELECT
+    cg.ID_CompraGasto,
+    cg.ID_Permiso,
+    cg.Numero_Comprobante,
+    cg.Monto_Real,
+    cg.Fecha
+FROM CompraGasto cg;
+
+CREATE OR REPLACE VIEW VistaResumenPermisos AS
+SELECT
+    p.ID_Permiso,
+    p.ID_Usuario,
+    p.MontoSolicitado,
+    p.Estado,
+    p.CodigoPermiso,
+    p.Fecha
+FROM Permiso p;
+
+CREATE OR REPLACE VIEW VistaUsuariosActivos AS
+SELECT
+    u.ID_Usuario,
+    u.Nombre,
+    u.Rol
+FROM Usuario u
+WHERE u.Rol != 'Inactivo';
+
+-- A partir de aca van las funciones
+
+CREATE OR REPLACE FUNCTION ObtenerTotalGasto(p_FechaInicio DATE, p_FechaFin DATE)
+RETURN DECIMAL IS
+    totalGasto DECIMAL(10, 2);
+BEGIN
+    SELECT SUM(Monto_Real)
+    INTO totalGasto
+    FROM CompraGasto
+    WHERE Fecha BETWEEN p_FechaInicio AND p_FechaFin;
+
+    RETURN totalGasto;
+END;
+
+CREATE OR REPLACE FUNCTION VerificarDisponibilidadPresupuesto(p_ID_Presupuesto INT, p_Monto DECIMAL)
+RETURN VARCHAR2 IS
+    presupuestoDisponible DECIMAL(10, 2);
+BEGIN
+    SELECT Monto
+    INTO presupuestoDisponible
+    FROM Presupuesto
+    WHERE ID_Presupuesto = p_ID_Presupuesto;
+
+    IF presupuestoDisponible >= p_Monto THEN
+        RETURN 'Suficiente';
+    ELSE
+        RETURN 'Insuficiente';
+    END IF;
+END;
+
+CREATE OR REPLACE FUNCTION ContarPermisosActivos
+RETURN INT IS
+    totalPermisos INT;
+BEGIN
+    SELECT COUNT(*)
+    INTO totalPermisos
+    FROM Permiso
+    WHERE Estado = 'Activo';
+
+    RETURN totalPermisos;
+END;
+
+CREATE OR REPLACE FUNCTION ObtenerGastoPromedio(p_ID_CentroDeCosto INT)
+RETURN DECIMAL IS
+    gastoPromedio DECIMAL(10, 2);
+BEGIN
+    SELECT AVG(cg.Monto_Real)
+    INTO gastoPromedio
+    FROM CompraGasto cg
+    JOIN Permiso p ON cg.ID_Permiso = p.ID_Permiso
+    JOIN Presupuesto pr ON p.ID_Presupuesto = pr.ID_Presupuesto
+    WHERE pr.ID_CentroDeCosto = p_ID_CentroDeCosto;
+
+    RETURN gastoPromedio;
+END;
+
+-- A partir de aca van los cursores
+
+DECLARE
+    CURSOR CursorListaGastos IS
+        SELECT * FROM CompraGasto;
+    registro CompraGasto%ROWTYPE;
+BEGIN
+    OPEN CursorListaGastos;
+    LOOP
+        FETCH CursorListaGastos INTO registro;
+        EXIT WHEN CursorListaGastos%NOTFOUND;
+        -- Procesamiento de cada registro
+    END LOOP;
+    CLOSE CursorListaGastos;
+END;
+
+
+DECLARE
+    CURSOR CursorPermisosPorUsuario(p_ID_Usuario INT) IS
+        SELECT * FROM Permiso WHERE ID_Usuario = p_ID_Usuario;
+    registro Permiso%ROWTYPE;
+BEGIN
+    OPEN CursorPermisosPorUsuario(/* ID del Usuario */);
+    LOOP
+        FETCH CursorPermisosPorUsuario INTO registro;
+        EXIT WHEN CursorPermisosPorUsuario%NOTFOUND;
+        -- Procesamiento de cada registro
+    END LOOP;
+    CLOSE CursorPermisosPorUsuario;
+END;
+
+DECLARE
+    CURSOR CursorPresupuestoPorCentroCosto(p_ID_CentroDeCosto INT) IS
+        SELECT * FROM Presupuesto WHERE ID_CentroDeCosto = p_ID_CentroDeCosto;
+    registro Presupuesto%ROWTYPE;
+BEGIN
+    OPEN CursorPresupuestoPorCentroCosto(/* ID del Centro de Costo */);
+    LOOP
+        FETCH CursorPresupuestoPorCentroCosto INTO registro;
+        EXIT WHEN CursorPresupuestoPorCentroCosto%NOTFOUND;
+        -- Procesamiento de cada registro
+    END LOOP;
+    CLOSE CursorPresupuestoPorCentroCosto;
+END;
+
+DECLARE
+    CURSOR CursorUsuariosPorRol(p_Rol VARCHAR2) IS
+        SELECT * FROM Usuario WHERE Rol = p_Rol;
+    registro Usuario%ROWTYPE;
+BEGIN
+    OPEN CursorUsuariosPorRol(/* Rol específico */);
+    LOOP
+        FETCH CursorUsuariosPorRol INTO registro;
+        EXIT WHEN CursorUsuariosPorRol%NOTFOUND;
+        -- Procesamiento de cada registro
+    END LOOP;
+    CLOSE CursorUsuariosPorRol;
+END;
+
