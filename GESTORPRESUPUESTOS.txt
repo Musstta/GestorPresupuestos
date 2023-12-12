@@ -792,6 +792,153 @@ SELECT
 FROM Usuario u
 WHERE u.Rol != 'Inactivo';
 
+CREATE OR REPLACE PROCEDURE EliminarCompraGasto (
+    p_ID_CompraGasto IN CompraGasto.ID_CompraGasto%TYPE)
+IS
+BEGIN
+    -- Elimina una compra/gasto de la tabla CompraGasto.
+    DELETE FROM CompraGasto
+    WHERE ID_CompraGasto = p_ID_CompraGasto;
+END;
+
+CREATE OR REPLACE PROCEDURE InsertarUsuario (
+    p_ID_Usuario IN Usuario.ID_Usuario%TYPE,
+    p_Nombre IN Usuario.Nombre%TYPE,
+    p_Rol IN Usuario.Rol%TYPE,
+    p_ID_CentroDeCosto IN Usuario.ID_CentroDeCosto%TYPE)
+IS
+BEGIN
+    -- Inserta un nuevo usuario en la tabla Usuario.
+    INSERT INTO Usuario (ID_Usuario, Nombre, Rol, ID_CentroDeCosto)
+    VALUES (p_ID_Usuario, p_Nombre, p_Rol, p_ID_CentroDeCosto);
+END;
+
+CREATE OR REPLACE PROCEDURE ActualizarUsuario (
+    p_ID_Usuario IN Usuario.ID_Usuario%TYPE,
+    p_Nombre IN Usuario.Nombre%TYPE,
+    p_Rol IN Usuario.Rol%TYPE,
+    p_ID_CentroDeCosto IN Usuario.ID_CentroDeCosto%TYPE)
+IS
+BEGIN
+    -- Actualiza la información de un usuario en la tabla Usuario.
+    UPDATE Usuario
+    SET Nombre = p_Nombre,
+        Rol = p_Rol,
+        ID_CentroDeCosto = p_ID_CentroDeCosto
+    WHERE ID_Usuario = p_ID_Usuario;
+END;
+
+CREATE OR REPLACE PROCEDURE EliminarUsuario (
+    p_ID_Usuario IN Usuario.ID_Usuario%TYPE)
+IS
+BEGIN
+    -- Elimina un usuario de la tabla Usuario.
+    DELETE FROM Usuario
+    WHERE ID_Usuario = p_ID_Usuario;
+END;
+
+CREATE OR REPLACE PROCEDURE InsertarCentroDeCosto (
+    p_ID_CentroDeCosto IN CentroDeCosto.ID_CentroDeCosto%TYPE,
+    p_Nombre IN CentroDeCosto.Nombre%TYPE,
+    p_ID_Padre IN CentroDeCosto.ID_Padre%TYPE)
+IS
+BEGIN
+    -- Inserta un nuevo centro de costo en la tabla CentroDeCosto.
+    INSERT INTO CentroDeCosto (ID_CentroDeCosto, Nombre, ID_Padre)
+    VALUES (p_ID_CentroDeCosto, p_Nombre, p_ID_Padre);
+END;
+
+CREATE OR REPLACE PROCEDURE ActualizarCentroDeCosto (
+    p_ID_CentroDeCosto IN CentroDeCosto.ID_CentroDeCosto%TYPE,
+    p_Nombre IN CentroDeCosto.Nombre%TYPE,
+    p_ID_Padre IN CentroDeCosto.ID_Padre%TYPE)
+IS
+BEGIN
+    -- Actualiza la información de un centro de costo en la tabla CentroDeCosto.
+    UPDATE CentroDeCosto
+    SET Nombre = p_Nombre,
+        ID_Padre = p_ID_Padre
+    WHERE ID_CentroDeCosto = p_ID_CentroDeCosto;
+END;
+
+CREATE OR REPLACE PROCEDURE EliminarCentroDeCosto (
+    p_ID_CentroDeCosto IN CentroDeCosto.ID_CentroDeCosto%TYPE)
+IS
+BEGIN
+    -- Elimina un centro de costo de la tabla CentroDeCosto.
+    DELETE FROM CentroDeCosto
+    WHERE ID_CentroDeCosto = p_ID_CentroDeCosto;
+END;
+
+CREATE OR REPLACE PROCEDURE InsertarPresupuesto (
+    p_ID_Presupuesto IN Presupuesto.ID_Presupuesto%TYPE,
+    p_ID_CentroDeCosto IN Presupuesto.ID_CentroDeCosto%TYPE,
+    p_ID_RUBRO IN Presupuesto.ID_RUBRO%TYPE,
+    p_Monto IN Presupuesto.Monto%TYPE,
+    p_Periodo IN Presupuesto.Periodo%TYPE)
+IS
+BEGIN
+    -- Inserta un nuevo presupuesto en la tabla Presupuesto.
+    INSERT INTO Presupuesto (ID_Presupuesto, ID_CentroDeCosto, ID_RUBRO, Monto, Periodo)
+    VALUES (p_ID_Presupuesto, p_ID_CentroDeCosto, p_ID_RUBRO, p_Monto, p_Periodo);
+END;
+
+CREATE OR REPLACE PROCEDURE ActualizarPresupuesto (
+    p_ID_Presupuesto IN Presupuesto.ID_Presupuesto%TYPE,
+    p_ID_CentroDeCosto IN Presupuesto.ID_CentroDeCosto%TYPE,
+    p_ID_RUBRO IN Presupuesto.ID_RUBRO%TYPE,
+    p_Monto IN Presupuesto.Monto%TYPE,
+    p_Periodo IN Presupuesto.Periodo%TYPE)
+IS
+BEGIN
+    -- Actualiza la información de un presupuesto en la tabla Presupuesto.
+    UPDATE Presupuesto
+    SET ID_CentroDeCosto = p_ID_CentroDeCosto,
+        ID_RUBRO = p_ID_RUBRO,
+        Monto = p_Monto,
+        Periodo = p_Periodo
+    WHERE ID_Presupuesto = p_ID_Presupuesto;
+END;
+
+CREATE OR REPLACE PROCEDURE EliminarPresupuesto (
+    p_ID_Presupuesto IN Presupuesto.ID_Presupuesto%TYPE)
+IS
+BEGIN
+    -- Elimina un presupuesto de la tabla Presupuesto.
+    DELETE FROM Presupuesto
+    WHERE ID_Presupuesto = p_ID_Presupuesto;
+END;
+
+CREATE OR REPLACE PROCEDURE InsertarRubro (
+    p_ID_Rubro IN Rubro.ID_Rubro%TYPE,
+    p_Nombre IN Rubro.Nombre%TYPE)
+IS
+BEGIN
+    -- Inserta un nuevo rubro en la tabla Rubro.
+    INSERT INTO Rubro (ID_Rubro, Nombre)
+    VALUES (p_ID_Rubro, p_Nombre);
+END;
+
+CREATE OR REPLACE PROCEDURE ActualizarRubro (
+    p_ID_Rubro IN Rubro.ID_Rubro%TYPE,
+    p_Nombre IN Rubro.Nombre%TYPE)
+IS
+BEGIN
+    -- Actualiza la información de un rubro en la tabla Rubro.
+    UPDATE Rubro
+    SET Nombre = p_Nombre
+    WHERE ID_Rubro = p_ID_Rubro;
+END;
+
+CREATE OR REPLACE PROCEDURE EliminarRubro (
+    p_ID_Rubro IN Rubro.ID_Rubro%TYPE)
+IS
+BEGIN
+    -- Elimina un rubro de la tabla Rubro.
+    DELETE FROM Rubro
+    WHERE ID_Rubro = p_ID_Rubro;
+END;
+
 -- A partir de aca van las funciones
 
 CREATE OR REPLACE FUNCTION ObtenerTotalGasto(p_FechaInicio DATE, p_FechaFin DATE)
