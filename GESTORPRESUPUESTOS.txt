@@ -644,20 +644,23 @@ CREATE TABLE Liquidacion (
 CREATE TABLE Rubro(
     ID_Rubro INT PRIMARY KEY NOT NULL,
     Nombre VARCHAR2(255)
-);
+)
 
 CREATE OR REPLACE VIEW VistaComprasPendientes AS
+-- Muestra compras pendientes, incluyendo número de comprobante, monto y fecha, filtradas por estado pendiente.
 SELECT CG.ID_CompraGasto, CG.Numero_Comprobante, CG.Monto_Real, CG.Fecha, P.Estado
 FROM CompraGasto CG
 JOIN Permiso P ON CG.ID_Permiso = P.ID_Permiso
 WHERE P.Estado = 'Pendiente';
 
 CREATE OR REPLACE VIEW VistaUsuariosMontoSolicitado AS
+-- Muestra usuarios y el monto solicitado en sus permisos.
 SELECT U.Nombre, U.Rol, P.MontoSolicitado
 FROM Usuario U
 JOIN Permiso P ON U.ID_Usuario = P.ID_Usuario;
 
 CREATE OR REPLACE VIEW VistaModificacionesRecientes AS
+-- Muestra modificaciones recientes, incluyendo ID, monto, fecha y presupuestos origen y destino.
 SELECT M.ID_Modificacion, M.Monto, M.Fecha, PO.ID_Presupuesto AS PresupuestoOrigen, PD.ID_Presupuesto AS PresupuestoDestino
 FROM Modificacion M
 JOIN Presupuesto PO ON M.ID_PresupuestoOrigen = PO.ID_Presupuesto
@@ -665,45 +668,20 @@ JOIN Presupuesto PD ON M.ID_PresupuestoDestino = PD.ID_Presupuesto
 ORDER BY M.Fecha DESC;
 
 CREATE OR REPLACE VIEW VistaLiquidacionesAprobadas AS
+-- Muestra liquidaciones aprobadas, incluyendo ID, monto, fecha y estado aprobado.
 SELECT L.ID_Liquidacion, L.Monto, L.Fecha, P.Estado
 FROM Liquidacion L
 JOIN Presupuesto P ON L.ID_Presupuesto = P.ID_Presupuesto
 WHERE P.Estado = 'Aprobado';
 
 CREATE OR REPLACE VIEW VistaGastosPorCentroDeCosto AS
+-- Muestra gastos agrupados por centro de costo, incluyendo nombre del centro de costo y monto total.
 SELECT CC.Nombre AS CentroDeCosto, SUM(CG.Monto_Real) AS MontoTotal
 FROM CompraGasto CG
 JOIN Permiso P ON CG.ID_Permiso = P.ID_Permiso
 JOIN Usuario U ON P.ID_Usuario = U.ID_Usuario
 JOIN CentroDeCosto CC ON U.ID_CentroDeCosto = CC.ID_CentroDeCosto
 GROUP BY CC.Nombre;
-
-CREATE OR REPLACE VIEW VistaPresupuestoPorPeriodo AS
-SELECT P.ID_Presupuesto, P.Periodo, P.Monto, CC.Nombre AS CentroDeCosto
-FROM Presupuesto P
-JOIN CentroDeCosto CC ON P.ID_CentroDeCosto = CC.ID_CentroDeCosto;
-
-CREATE OR REPLACE VIEW VistaComprasPorUsuario AS
-SELECT U.Nombre AS Usuario, CG.Numero_Comprobante, CG.Monto_Real, CG.Fecha
-FROM CompraGasto CG
-JOIN Permiso P ON CG.ID_Permiso = P.ID_Permiso
-JOIN Usuario U ON P.ID_Usuario = U.ID_Usuario;
-
-CREATE OR REPLACE VIEW VistaLiquidacionesPorRubro AS
-SELECT R.Nombre AS Rubro, L.ID_Liquidacion, L.Monto, L.Fecha
-FROM Liquidacion L
-JOIN Presupuesto P ON L.ID_Presupuesto = P.ID_Presupuesto
-JOIN Rubro R ON P.ID_RUBRO = R.ID_Rubro;
-
-CREATE OR REPLACE VIEW VistaMontoTotalModificado AS
-SELECT SUM(M.Monto) AS MontoTotalModificado
-FROM Modificacion M;
-
-CREATE OR REPLACE VIEW VistaUsuariosPorCentroDeCosto AS
-SELECT CC.Nombre AS CentroDeCosto, U.Nombre AS Usuario, U.Rol
-FROM Usuario U
-JOIN CentroDeCosto CC ON U.ID_CentroDeCosto = CC.ID_CentroDeCosto;
-
 
 -- A partir de aca van los procedimientos almacenados
 
