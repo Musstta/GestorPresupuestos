@@ -5,7 +5,6 @@ Integrantes
 Christopher Briceno Arias
 Salim Mustafa Arce
 Jose Daniel Rojas Campos
-Camila Luna Castro
 
 Tabla CompraGasto:
 
@@ -132,31 +131,31 @@ Nombre: Nombre del rubro.
 --***********************CREACION DE LAS TABLAS******************************
 -- Crear la tabla CompraGasto con ID_Permiso como clave foránea
 CREATE TABLE CompraGasto (
-    ID_CompraGasto INT PRIMARY KEY,
-    ID_Permiso INT,
-    Numero_Comprobante VARCHAR2(255),
-    Monto_Real DECIMAL(10, 2),
-    Fecha DATE,
+    ID_CompraGasto INT PRIMARY KEY NOT NULL,
+    ID_Permiso INT NOT NULL,
+    Numero_Comprobante VARCHAR2(255) NOT NULL,
+    Monto_Real DECIMAL(10, 2) NOT NULL,
+    Fecha DATE NOT NULL,
     FOREIGN KEY (ID_Permiso) REFERENCES Permiso(ID_Permiso)
 );
 
 
 -- Crear la tabla Permiso
 CREATE TABLE Permiso (
-    ID_Permiso INT PRIMARY KEY,
-    ID_Usuario INT,
-    MontoSolicitado DECIMAL(10, 2),
-    Estado VARCHAR2(255),
-    CodigoPermiso VARCHAR2(255),
-    Fecha DATE,
-    ID_Presupuesto INT,
+    ID_Permiso INT PRIMARY KEY NOT NULL,
+    ID_Usuario INT NOT NULL,
+    MontoSolicitado DECIMAL(10, 2) NOT NULL,
+    Estado VARCHAR2(255) NOT NULL,
+    CodigoPermiso VARCHAR2(255) NOT NULL,
+    Fecha DATE NOT NULL,
+    ID_Presupuesto INT NOT NULL,
     FOREIGN KEY (ID_Usuario) REFERENCES Usuario(ID_Usuario),
     FOREIGN KEY (ID_Presupuesto) REFERENCES Presupuesto(ID_Presupuesto)
 );
 
 -- Crear la tabla Usuario
 CREATE TABLE Usuario (
-    ID_Usuario INT PRIMARY KEY,
+    ID_Usuario INT PRIMARY KEY NOT NULL,
     Nombre VARCHAR2(255) NOT NULL,
     Rol VARCHAR2(255) NOT NULL,
     ID_CentroDeCosto INT NOT NULL,
@@ -185,9 +184,7 @@ CREATE TABLE Modificacion (
     ID_PresupuestoOrigen INT NOT NULL,
     ID_PresupuestoDestino INT NOT NULL,
     Monto DECIMAL(10, 2) NOT NULL,
-    Fecha DATE NOT NULL,
-    FOREIGN KEY (ID_PresupuestoOrigen) REFERENCES Presupuesto(ID_Presupuesto),
-    FOREIGN KEY (ID_PresupuestoDestino) REFERENCES Presupuesto(ID_Presupuesto)
+    Fecha DATE NOT NULL
 );
 
 -- Crear la tabla Liquidacion
@@ -202,7 +199,7 @@ CREATE TABLE Liquidacion (
 
 CREATE TABLE Rubro(
     ID_Rubro INT PRIMARY KEY NOT NULL,
-    Nombre VARCHAR2(255)
+    Nombre VARCHAR2(255)NOT NULL
 );
 --***********************  INSERTS  ******************************
 
@@ -226,7 +223,7 @@ INSERT INTO Rubro (ID_Rubro, Nombre) VALUES (16, 'Investigación y desarrollo');
 INSERT INTO Rubro (ID_Rubro, Nombre) VALUES (17, 'Viajes y alojamiento');
 INSERT INTO Rubro (ID_Rubro, Nombre) VALUES (18, 'Energía y servicios públicos');
 INSERT INTO Rubro (ID_Rubro, Nombre) VALUES (19, 'Eventos y conferencias');
-INSERT INTO Rubro (ID_Rubro, Nombre) VALUES (20, 'Otros');
+INSERT INTO Rubro (ID_Rubro, Nombre) VALUES (20, 'Limpieza');
 
 -- Insertar datos en la tabla CentroDeCosto
 INSERT INTO CentroDeCosto (ID_CentroDeCosto, Nombre, ID_Padre) VALUES (1, 'Administración', 0);
@@ -292,7 +289,7 @@ INSERT INTO Usuario (ID_Usuario, Nombre, Rol, ID_CentroDeCosto) VALUES (16, 'Pat
 INSERT INTO Usuario (ID_Usuario, Nombre, Rol, ID_CentroDeCosto) VALUES (17, 'Jorge Gómez', 'Coordinador de Proyectos', 13);
 INSERT INTO Usuario (ID_Usuario, Nombre, Rol, ID_CentroDeCosto) VALUES (18, 'Monica Silva', 'Analista de Proyectos', 13);
 INSERT INTO Usuario (ID_Usuario, Nombre, Rol, ID_CentroDeCosto) VALUES (19, 'Héctor Castro', 'Ingeniero de Servicios Generales', 16);
-INSERT INTO Usuario (ID_Usuario, Nombre, Rol, ID_CentroDeCosto) VALUES (20, 'Lucía Ortiz', 'Especialista en Eventos', 0);
+INSERT INTO Usuario (ID_Usuario, Nombre, Rol, ID_CentroDeCosto) VALUES (20, 'Lucía Ortiz', 'Especialista en Eventos', 2);
 
 
 -- Insertar datos en la tabla Liquidacion
@@ -376,7 +373,7 @@ INSERT INTO CompraGasto (ID_CompraGasto, ID_Permiso, Numero_Comprobante, Monto_R
 INSERT INTO CompraGasto (ID_CompraGasto, ID_Permiso, Numero_Comprobante, Monto_Real, Fecha) VALUES (14, 14, 'C34567', 3000.00, TO_DATE('2023-03-10', 'YYYY-MM-DD'));
 INSERT INTO CompraGasto (ID_CompraGasto, ID_Permiso, Numero_Comprobante, Monto_Real, Fecha) VALUES (15, 15, 'C89012', 5500.00, TO_DATE('2023-03-05', 'YYYY-MM-DD'));
 
-DROP TABLE LIQUIDACION;
+
 -- Seleccionar todos los registros de la tabla Usuario
 SELECT * FROM CENTRODECOSTO;
 SELECT * FROM COMPRAGASTO;
@@ -387,26 +384,8 @@ SELECT * FROM PRESUPUESTO;
 SELECT * FROM RUBRO;
 SELECT * FROM USUARIO;
 
---objetos pl sql 
-
--- Creación de tabla de presupuesto
-CREATE TABLE Presupuesto (
-    ID_Presupuesto INT PRIMARY KEY,
-    Nombre VARCHAR2(255),
-    Monto DECIMAL(10, 2),
-    FechaInicio DATE,
-    FechaFin DATE
-);
-
--- Creación de tabla de modificaciones
-CREATE TABLE Modificacion (
-    ID_Modificacion INT PRIMARY KEY,
-    ID_Presupuesto INT,
-    TipoModificacion VARCHAR2(50),
-    FechaModificacion DATE,
-    FOREIGN KEY (ID_Presupuesto) REFERENCES Presupuesto(ID_Presupuesto)
-);
-
+--FIN SALIM
+--INICIA JOSE
 -- Procedimiento para crear un nuevo presupuesto
 CREATE OR REPLACE PROCEDURE CrearPresupuesto (
     p_ID_Presupuesto INT,
@@ -486,24 +465,8 @@ BEGIN
 END;
 
 
--- Diccionario de datos 
 
--- Creación de tablas
-CREATE TABLE Presupuesto (
-    ID_Presupuesto INT PRIMARY KEY,
-    Nombre VARCHAR2(255),
-    Monto DECIMAL(10, 2),
-    FechaInicio DATE,
-    FechaFin DATE
-);
 
-CREATE TABLE Modificacion (
-    ID_Modificacion INT PRIMARY KEY,
-    ID_Presupuesto INT,
-    TipoModificacion VARCHAR2(50),
-    FechaModificacion DATE,
-    FOREIGN KEY (ID_Presupuesto) REFERENCES Presupuesto(ID_Presupuesto)
-);
 
 -- Procedimientos almacenados
 CREATE OR REPLACE PROCEDURE CrearPresupuesto (
@@ -644,44 +607,7 @@ CREATE TABLE Liquidacion (
 CREATE TABLE Rubro(
     ID_Rubro INT PRIMARY KEY NOT NULL,
     Nombre VARCHAR2(255)
-)
-
-CREATE OR REPLACE VIEW VistaComprasPendientes AS
--- Muestra compras pendientes, incluyendo número de comprobante, monto y fecha, filtradas por estado pendiente.
-SELECT CG.ID_CompraGasto, CG.Numero_Comprobante, CG.Monto_Real, CG.Fecha, P.Estado
-FROM CompraGasto CG
-JOIN Permiso P ON CG.ID_Permiso = P.ID_Permiso
-WHERE P.Estado = 'Pendiente';
-
-CREATE OR REPLACE VIEW VistaUsuariosMontoSolicitado AS
--- Muestra usuarios y el monto solicitado en sus permisos.
-SELECT U.Nombre, U.Rol, P.MontoSolicitado
-FROM Usuario U
-JOIN Permiso P ON U.ID_Usuario = P.ID_Usuario;
-
-CREATE OR REPLACE VIEW VistaModificacionesRecientes AS
--- Muestra modificaciones recientes, incluyendo ID, monto, fecha y presupuestos origen y destino.
-SELECT M.ID_Modificacion, M.Monto, M.Fecha, PO.ID_Presupuesto AS PresupuestoOrigen, PD.ID_Presupuesto AS PresupuestoDestino
-FROM Modificacion M
-JOIN Presupuesto PO ON M.ID_PresupuestoOrigen = PO.ID_Presupuesto
-JOIN Presupuesto PD ON M.ID_PresupuestoDestino = PD.ID_Presupuesto
-ORDER BY M.Fecha DESC;
-
-CREATE OR REPLACE VIEW VistaLiquidacionesAprobadas AS
--- Muestra liquidaciones aprobadas, incluyendo ID, monto, fecha y estado aprobado.
-SELECT L.ID_Liquidacion, L.Monto, L.Fecha, P.Estado
-FROM Liquidacion L
-JOIN Presupuesto P ON L.ID_Presupuesto = P.ID_Presupuesto
-WHERE P.Estado = 'Aprobado';
-
-CREATE OR REPLACE VIEW VistaGastosPorCentroDeCosto AS
--- Muestra gastos agrupados por centro de costo, incluyendo nombre del centro de costo y monto total.
-SELECT CC.Nombre AS CentroDeCosto, SUM(CG.Monto_Real) AS MontoTotal
-FROM CompraGasto CG
-JOIN Permiso P ON CG.ID_Permiso = P.ID_Permiso
-JOIN Usuario U ON P.ID_Usuario = U.ID_Usuario
-JOIN CentroDeCosto CC ON U.ID_CentroDeCosto = CC.ID_CentroDeCosto
-GROUP BY CC.Nombre;
+);
 
 -- A partir de aca van los procedimientos almacenados
 
@@ -762,7 +688,9 @@ BEGIN
     DELETE FROM Permiso
     WHERE ID_Permiso = p_ID_Permiso;
 END;
+--FIN  JOSE
 
+--INICIA CAMILA
 -- A partir de aca van las vistas
 
 CREATE OR REPLACE VIEW VistaDetalleGastos AS
@@ -791,153 +719,6 @@ SELECT
     u.Rol
 FROM Usuario u
 WHERE u.Rol != 'Inactivo';
-
-CREATE OR REPLACE PROCEDURE EliminarCompraGasto (
-    p_ID_CompraGasto IN CompraGasto.ID_CompraGasto%TYPE)
-IS
-BEGIN
-    -- Elimina una compra/gasto de la tabla CompraGasto.
-    DELETE FROM CompraGasto
-    WHERE ID_CompraGasto = p_ID_CompraGasto;
-END;
-
-CREATE OR REPLACE PROCEDURE InsertarUsuario (
-    p_ID_Usuario IN Usuario.ID_Usuario%TYPE,
-    p_Nombre IN Usuario.Nombre%TYPE,
-    p_Rol IN Usuario.Rol%TYPE,
-    p_ID_CentroDeCosto IN Usuario.ID_CentroDeCosto%TYPE)
-IS
-BEGIN
-    -- Inserta un nuevo usuario en la tabla Usuario.
-    INSERT INTO Usuario (ID_Usuario, Nombre, Rol, ID_CentroDeCosto)
-    VALUES (p_ID_Usuario, p_Nombre, p_Rol, p_ID_CentroDeCosto);
-END;
-
-CREATE OR REPLACE PROCEDURE ActualizarUsuario (
-    p_ID_Usuario IN Usuario.ID_Usuario%TYPE,
-    p_Nombre IN Usuario.Nombre%TYPE,
-    p_Rol IN Usuario.Rol%TYPE,
-    p_ID_CentroDeCosto IN Usuario.ID_CentroDeCosto%TYPE)
-IS
-BEGIN
-    -- Actualiza la información de un usuario en la tabla Usuario.
-    UPDATE Usuario
-    SET Nombre = p_Nombre,
-        Rol = p_Rol,
-        ID_CentroDeCosto = p_ID_CentroDeCosto
-    WHERE ID_Usuario = p_ID_Usuario;
-END;
-
-CREATE OR REPLACE PROCEDURE EliminarUsuario (
-    p_ID_Usuario IN Usuario.ID_Usuario%TYPE)
-IS
-BEGIN
-    -- Elimina un usuario de la tabla Usuario.
-    DELETE FROM Usuario
-    WHERE ID_Usuario = p_ID_Usuario;
-END;
-
-CREATE OR REPLACE PROCEDURE InsertarCentroDeCosto (
-    p_ID_CentroDeCosto IN CentroDeCosto.ID_CentroDeCosto%TYPE,
-    p_Nombre IN CentroDeCosto.Nombre%TYPE,
-    p_ID_Padre IN CentroDeCosto.ID_Padre%TYPE)
-IS
-BEGIN
-    -- Inserta un nuevo centro de costo en la tabla CentroDeCosto.
-    INSERT INTO CentroDeCosto (ID_CentroDeCosto, Nombre, ID_Padre)
-    VALUES (p_ID_CentroDeCosto, p_Nombre, p_ID_Padre);
-END;
-
-CREATE OR REPLACE PROCEDURE ActualizarCentroDeCosto (
-    p_ID_CentroDeCosto IN CentroDeCosto.ID_CentroDeCosto%TYPE,
-    p_Nombre IN CentroDeCosto.Nombre%TYPE,
-    p_ID_Padre IN CentroDeCosto.ID_Padre%TYPE)
-IS
-BEGIN
-    -- Actualiza la información de un centro de costo en la tabla CentroDeCosto.
-    UPDATE CentroDeCosto
-    SET Nombre = p_Nombre,
-        ID_Padre = p_ID_Padre
-    WHERE ID_CentroDeCosto = p_ID_CentroDeCosto;
-END;
-
-CREATE OR REPLACE PROCEDURE EliminarCentroDeCosto (
-    p_ID_CentroDeCosto IN CentroDeCosto.ID_CentroDeCosto%TYPE)
-IS
-BEGIN
-    -- Elimina un centro de costo de la tabla CentroDeCosto.
-    DELETE FROM CentroDeCosto
-    WHERE ID_CentroDeCosto = p_ID_CentroDeCosto;
-END;
-
-CREATE OR REPLACE PROCEDURE InsertarPresupuesto (
-    p_ID_Presupuesto IN Presupuesto.ID_Presupuesto%TYPE,
-    p_ID_CentroDeCosto IN Presupuesto.ID_CentroDeCosto%TYPE,
-    p_ID_RUBRO IN Presupuesto.ID_RUBRO%TYPE,
-    p_Monto IN Presupuesto.Monto%TYPE,
-    p_Periodo IN Presupuesto.Periodo%TYPE)
-IS
-BEGIN
-    -- Inserta un nuevo presupuesto en la tabla Presupuesto.
-    INSERT INTO Presupuesto (ID_Presupuesto, ID_CentroDeCosto, ID_RUBRO, Monto, Periodo)
-    VALUES (p_ID_Presupuesto, p_ID_CentroDeCosto, p_ID_RUBRO, p_Monto, p_Periodo);
-END;
-
-CREATE OR REPLACE PROCEDURE ActualizarPresupuesto (
-    p_ID_Presupuesto IN Presupuesto.ID_Presupuesto%TYPE,
-    p_ID_CentroDeCosto IN Presupuesto.ID_CentroDeCosto%TYPE,
-    p_ID_RUBRO IN Presupuesto.ID_RUBRO%TYPE,
-    p_Monto IN Presupuesto.Monto%TYPE,
-    p_Periodo IN Presupuesto.Periodo%TYPE)
-IS
-BEGIN
-    -- Actualiza la información de un presupuesto en la tabla Presupuesto.
-    UPDATE Presupuesto
-    SET ID_CentroDeCosto = p_ID_CentroDeCosto,
-        ID_RUBRO = p_ID_RUBRO,
-        Monto = p_Monto,
-        Periodo = p_Periodo
-    WHERE ID_Presupuesto = p_ID_Presupuesto;
-END;
-
-CREATE OR REPLACE PROCEDURE EliminarPresupuesto (
-    p_ID_Presupuesto IN Presupuesto.ID_Presupuesto%TYPE)
-IS
-BEGIN
-    -- Elimina un presupuesto de la tabla Presupuesto.
-    DELETE FROM Presupuesto
-    WHERE ID_Presupuesto = p_ID_Presupuesto;
-END;
-
-CREATE OR REPLACE PROCEDURE InsertarRubro (
-    p_ID_Rubro IN Rubro.ID_Rubro%TYPE,
-    p_Nombre IN Rubro.Nombre%TYPE)
-IS
-BEGIN
-    -- Inserta un nuevo rubro en la tabla Rubro.
-    INSERT INTO Rubro (ID_Rubro, Nombre)
-    VALUES (p_ID_Rubro, p_Nombre);
-END;
-
-CREATE OR REPLACE PROCEDURE ActualizarRubro (
-    p_ID_Rubro IN Rubro.ID_Rubro%TYPE,
-    p_Nombre IN Rubro.Nombre%TYPE)
-IS
-BEGIN
-    -- Actualiza la información de un rubro en la tabla Rubro.
-    UPDATE Rubro
-    SET Nombre = p_Nombre
-    WHERE ID_Rubro = p_ID_Rubro;
-END;
-
-CREATE OR REPLACE PROCEDURE EliminarRubro (
-    p_ID_Rubro IN Rubro.ID_Rubro%TYPE)
-IS
-BEGIN
-    -- Elimina un rubro de la tabla Rubro.
-    DELETE FROM Rubro
-    WHERE ID_Rubro = p_ID_Rubro;
-END;
 
 -- A partir de aca van las funciones
 
@@ -1053,4 +834,566 @@ BEGIN
     END LOOP;
     CLOSE CursorUsuariosPorRol;
 END;
+
+
+--CRUDS Python
+--INSERTAR COMPRA GASTO
+CREATE OR REPLACE PROCEDURE InsertarCompraGasto (
+    p_ID_CompraGasto IN INT,
+    p_ID_Permiso IN INT,
+    p_Numero_Comprobante IN VARCHAR2,
+    p_Monto_Real IN DECIMAL,
+    p_Fecha IN DATE
+)
+AS
+BEGIN
+    INSERT INTO CompraGasto (ID_CompraGasto, ID_Permiso, Numero_Comprobante, Monto_Real, Fecha)
+    VALUES (p_ID_CompraGasto, p_ID_Permiso, p_Numero_Comprobante, p_Monto_Real, p_Fecha);
+    COMMIT;
+END;
+
+
+--FIN  CAMILA
+
+
+-- INICIA Christopher
+--RUBROS
+
+
+--INSERTARRUBRO
+CREATE OR REPLACE PROCEDURE InsertarRubro (
+    p_ID_Rubro IN INT,
+    p_Nombre IN VARCHAR2
+)
+AS
+BEGIN
+    INSERT INTO Rubro (ID_Rubro, Nombre)
+    VALUES (p_ID_Rubro, p_Nombre);
+    COMMIT;
+END;
+--Editar los registros
+CREATE OR REPLACE PROCEDURE EditarRubro (
+    p_ID_Rubro IN INT,
+    p_NuevoNombre IN VARCHAR2
+)
+AS
+BEGIN
+    UPDATE Rubro
+    SET Nombre = p_NuevoNombre
+    WHERE ID_Rubro = p_ID_Rubro;
+
+    COMMIT;
+END;
+--Eliminar Rubros en la base de datos
+CREATE OR REPLACE PROCEDURE EliminarRubro (
+    p_ID_Rubro IN INT
+)
+AS
+BEGIN
+    DELETE FROM Rubro
+    WHERE ID_Rubro = p_ID_Rubro;
+
+    COMMIT;
+END;
+
+--VISTA DE LA INFORMACION 
+CREATE OR REPLACE PROCEDURE ObtenerDatosRubro (
+    p_cursor OUT SYS_REFCURSOR
+)
+AS
+BEGIN
+    OPEN p_cursor FOR
+    SELECT ID_Rubro, Nombre
+    FROM Rubro
+    ORDER BY ID_RUBRO ASC;
+END;
+
+
+SELECT * FROM RUBRO
+ORDER BY ID_RUBRO ASC;
+
+--CENTRO DE COSTO
+
+--CREAR CENTRO DE COSTO
+CREATE OR REPLACE PROCEDURE InsertarCentroDeCosto (
+    p_ID_CentroDeCosto IN INT,
+    p_Nombre IN VARCHAR2,
+    p_ID_Padre IN INT
+)
+AS
+BEGIN
+    INSERT INTO CentroDeCosto (ID_CentroDeCosto, Nombre, ID_Padre)
+    VALUES (p_ID_CentroDeCosto, p_Nombre, p_ID_Padre);
+    COMMIT;
+END;
+
+--Leer Datos
+CREATE OR REPLACE PROCEDURE ObtenerDatosCentroDeCosto (
+    p_cursor OUT SYS_REFCURSOR
+)
+AS
+BEGIN
+    OPEN p_cursor FOR
+    SELECT ID_CentroDeCosto, Nombre, ID_Padre
+    FROM CentroDeCosto
+    ORDER BY ID_CentroDeCosto ASC;
+END;
+
+--Editar Centros de Costo
+CREATE OR REPLACE PROCEDURE EditarCentroDeCosto (
+    p_ID_CentroDeCosto IN INT,
+    p_NuevoNombre IN VARCHAR2,
+    p_NuevoID_Padre IN INT
+)
+AS
+BEGIN
+    UPDATE CentroDeCosto
+    SET Nombre = p_NuevoNombre,
+        ID_Padre = p_NuevoID_Padre
+    WHERE ID_CentroDeCosto = p_ID_CentroDeCosto;
+
+    COMMIT;
+END;
+
+--Eliminar Centro de Costo
+CREATE OR REPLACE PROCEDURE EliminarCentroDeCosto (
+    p_ID_CentroDeCosto IN INT
+)
+AS
+BEGIN
+    DELETE FROM CentroDeCosto
+    WHERE ID_CentroDeCosto = p_ID_CentroDeCosto;
+
+    COMMIT;
+END;
+--Usuario
+--Leer usuario
+CREATE OR REPLACE PROCEDURE ObtenerDatosUsuario (
+    p_cursor OUT SYS_REFCURSOR
+)
+AS
+BEGIN
+    OPEN p_cursor FOR
+    SELECT ID_Usuario, Nombre, Rol, ID_CentroDeCosto
+    FROM Usuario
+    ORDER BY ID_Usuario ASC;
+END;
+
+
+--Editar Usuario
+CREATE OR REPLACE PROCEDURE EditarUsuario (
+    p_ID_Usuario IN INT,
+    p_NuevoNombre IN VARCHAR2,
+    p_NuevoRol IN VARCHAR2,
+    p_NuevoID_CentroDeCosto IN INT
+)
+AS
+BEGIN
+    UPDATE Usuario
+    SET Nombre = p_NuevoNombre,
+        Rol = p_NuevoRol,
+        ID_CentroDeCosto = p_NuevoID_CentroDeCosto
+    WHERE ID_Usuario = p_ID_Usuario;
+
+    COMMIT;
+END;
+
+
+--Eliminar Usuario
+CREATE OR REPLACE PROCEDURE EliminarUsuario (
+    p_ID_Usuario IN INT
+)
+AS
+BEGIN
+    DELETE FROM Usuario
+    WHERE ID_Usuario = p_ID_Usuario;
+
+    COMMIT;
+END;
+--Crear Usuario
+CREATE OR REPLACE PROCEDURE InsertarUsuario (
+    p_ID_Usuario IN INT,
+    p_Nombre IN VARCHAR2,
+    p_Rol IN VARCHAR2,
+    p_ID_CentroDeCosto IN INT
+)
+AS
+BEGIN
+    -- Insertar en la tabla Usuario
+    INSERT INTO Usuario (ID_Usuario, Nombre, Rol, ID_CentroDeCosto)
+    VALUES (p_ID_Usuario, p_Nombre, p_Rol, p_ID_CentroDeCosto);
+
+   
+    COMMIT;
+END;
+
+select *from usuario;
+
+--Presupuestos
+CREATE OR REPLACE PROCEDURE InsertarPresupuesto (
+    p_ID_Presupuesto IN INT,
+    p_ID_CentroDeCosto IN INT,
+    p_ID_Rubro IN INT,
+    p_Monto DECIMAL,
+    p_Periodo VARCHAR2
+)
+AS
+BEGIN
+    
+    -- Insertar en la tabla Presupuesto
+    INSERT INTO Presupuesto (ID_Presupuesto, ID_CentroDeCosto, ID_RUBRO, Monto, Periodo)
+    VALUES (p_ID_Presupuesto, p_ID_CentroDeCosto, p_ID_Rubro, p_Monto, p_Periodo);
+    
+    COMMIT;
+END;
+--Leer Presupuestos
+CREATE OR REPLACE PROCEDURE ObtenerDatosPresupuesto (
+    p_cursor OUT SYS_REFCURSOR
+)
+AS
+BEGIN
+    OPEN p_cursor FOR
+    SELECT ID_Presupuesto, ID_CentroDeCosto, ID_RUBRO, Monto, Periodo
+    FROM Presupuesto
+    ORDER BY ID_Presupuesto ASC;
+END;
+
+--Editar Presupuestos
+CREATE OR REPLACE PROCEDURE EditarPresupuesto (
+    p_ID_Presupuesto IN INT,
+    p_NuevoID_CentroDeCosto IN INT,
+    p_NuevoID_RUBRO IN INT,
+    p_NuevoMonto DECIMAL,
+    p_NuevoPeriodo VARCHAR2
+)
+AS
+BEGIN
+    UPDATE Presupuesto
+    SET ID_CentroDeCosto = p_NuevoID_CentroDeCosto,
+        ID_RUBRO = p_NuevoID_RUBRO,
+        Monto = p_NuevoMonto,
+        Periodo = p_NuevoPeriodo
+    WHERE ID_Presupuesto = p_ID_Presupuesto;
+
+    COMMIT;
+END;
+
+--Eliminar Presupuestos
+CREATE OR REPLACE PROCEDURE EliminarPresupuesto (
+    p_ID_Presupuesto IN INT
+)
+AS
+BEGIN
+    DELETE FROM Presupuesto
+    WHERE ID_Presupuesto = p_ID_Presupuesto;
+
+    COMMIT;
+END;
+
+select * from Presupuesto
+
+
+--Crear permiso
+CREATE OR REPLACE PROCEDURE InsertarPermiso (
+    p_ID_Permiso IN INT,
+    p_ID_Usuario IN INT,
+    p_MontoSolicitado DECIMAL,
+    p_Estado VARCHAR2,
+    p_CodigoPermiso VARCHAR2,
+    p_Fecha DATE,
+    p_ID_Presupuesto INT
+)
+AS
+BEGIN
+    INSERT INTO Permiso (
+        ID_Permiso,
+        ID_Usuario,
+        MontoSolicitado,
+        Estado,
+        CodigoPermiso,
+        Fecha,
+        ID_Presupuesto
+    )
+    VALUES (
+        p_ID_Permiso,
+        p_ID_Usuario,
+        p_MontoSolicitado,
+        p_Estado,
+        p_CodigoPermiso,
+        p_Fecha,
+        p_ID_Presupuesto
+    );
+END;
+
+--Editar permiso
+CREATE OR REPLACE PROCEDURE EditarPermiso (
+    p_ID_Permiso IN INT,
+    p_NuevoID_Usuario IN INT,
+    p_NuevoMontoSolicitado DECIMAL,
+    p_NuevoEstado VARCHAR2,
+    p_NuevoCodigoPermiso VARCHAR2,
+    p_NuevaFecha DATE,
+    p_NuevoID_Presupuesto INT
+)
+AS
+BEGIN
+    UPDATE Permiso
+    SET ID_Usuario = p_NuevoID_Usuario,
+        MontoSolicitado = p_NuevoMontoSolicitado,
+        Estado = p_NuevoEstado,
+        CodigoPermiso = p_NuevoCodigoPermiso,
+        Fecha = p_NuevaFecha,
+        ID_Presupuesto = p_NuevoID_Presupuesto
+    WHERE ID_Permiso = p_ID_Permiso;
+
+    COMMIT;
+END;
+
+--Leer Permiso
+CREATE OR REPLACE PROCEDURE ObtenerDatosPermiso (
+    p_cursor OUT SYS_REFCURSOR
+)
+AS
+BEGIN
+    OPEN p_cursor FOR
+    SELECT ID_Permiso, ID_Usuario, MontoSolicitado, Estado, CodigoPermiso, Fecha, ID_Presupuesto
+    FROM Permiso
+    ORDER BY ID_Permiso ASC;
+END;
+
+
+
+--Eliminar Permiso
+CREATE OR REPLACE PROCEDURE EliminarPermiso (
+    p_ID_Permiso IN INT
+)
+AS
+BEGIN
+    DELETE FROM Permiso
+    WHERE ID_Permiso = p_ID_Permiso;
+
+    COMMIT;
+END;
+
+-- Modificacion
+--Crear Modificacion
+CREATE OR REPLACE PROCEDURE InsertarModificacion (
+    p_ID_Modificacion IN INT,
+    p_ID_PresupuestoOrigen IN INT,
+    p_ID_PresupuestoDestino IN INT,
+    p_Monto DECIMAL,
+    p_Fecha DATE
+)
+AS
+BEGIN
+    INSERT INTO Modificacion (
+        ID_Modificacion,
+        ID_PresupuestoOrigen,
+        ID_PresupuestoDestino,
+        Monto,
+        Fecha
+    )
+    VALUES (
+        p_ID_Modificacion,
+        p_ID_PresupuestoOrigen,
+        p_ID_PresupuestoDestino,
+        p_Monto,
+        p_Fecha
+    );
+
+    COMMIT;
+END;
+
+--Leer Modificacion
+CREATE OR REPLACE PROCEDURE ObtenerDatosModificacion (
+    p_cursor OUT SYS_REFCURSOR
+)
+AS
+BEGIN
+    OPEN p_cursor FOR
+    SELECT ID_Modificacion, ID_PresupuestoOrigen, ID_PresupuestoDestino, Monto, Fecha
+    FROM Modificacion
+    ORDER BY ID_Modificacion ASC;
+END;
+--Eliminar Modificacion
+CREATE OR REPLACE PROCEDURE EliminarModificacion (
+    p_ID_Modificacion IN INT
+)
+AS
+BEGIN
+    DELETE FROM Modificacion
+    WHERE ID_Modificacion = p_ID_Modificacion;
+
+    COMMIT;
+END;
+--Editar Modificacion
+CREATE OR REPLACE PROCEDURE EditarModificacion (
+    p_ID_Modificacion IN INT,
+    p_NuevoID_PresupuestoOrigen IN INT,
+    p_NuevoID_PresupuestoDestino IN INT,
+    p_NuevoMonto DECIMAL,
+    p_NuevaFecha DATE
+)
+AS
+BEGIN
+    UPDATE Modificacion
+    SET ID_PresupuestoOrigen = p_NuevoID_PresupuestoOrigen,
+        ID_PresupuestoDestino = p_NuevoID_PresupuestoDestino,
+        Monto = p_NuevoMonto,
+        Fecha = p_NuevaFecha
+    WHERE ID_Modificacion = p_ID_Modificacion;
+
+    COMMIT;
+END;
+--Liquidacion
+--Crear Liquidacion
+CREATE OR REPLACE PROCEDURE InsertarLiquidacion (
+    p_ID_Liquidacion IN INT,
+    p_ID_Presupuesto INT,
+    p_Monto DECIMAL,
+    p_Fecha DATE
+)
+AS
+BEGIN
+    INSERT INTO Liquidacion (
+        ID_Liquidacion,
+        ID_Presupuesto,
+        Monto,
+        Fecha
+    )
+    VALUES (
+        p_ID_Liquidacion,
+        p_ID_Presupuesto,
+        p_Monto,
+        p_Fecha
+    );
+
+    COMMIT;
+END;
+
+
+--Editar Liquidacion
+CREATE OR REPLACE PROCEDURE EditarLiquidacion (
+    p_ID_Liquidacion IN INT,
+    p_NuevoID_Presupuesto INT,
+    p_NuevoMonto DECIMAL,
+    p_NuevaFecha DATE
+)
+AS
+BEGIN
+    UPDATE Liquidacion
+    SET ID_Presupuesto = p_NuevoID_Presupuesto,
+        Monto = p_NuevoMonto,
+        Fecha = p_NuevaFecha
+    WHERE ID_Liquidacion = p_ID_Liquidacion;
+
+    COMMIT;
+END;
+--Eliminar Liquidacion
+CREATE OR REPLACE PROCEDURE EliminarLiquidacion (
+    p_ID_Liquidacion IN INT
+)
+AS
+BEGIN
+    DELETE FROM Liquidacion
+    WHERE ID_Liquidacion = p_ID_Liquidacion;
+
+    COMMIT;
+END;
+--Leer Liquidacion
+CREATE OR REPLACE PROCEDURE ObtenerDatosLiquidacion (
+    p_cursor OUT SYS_REFCURSOR
+)
+AS
+BEGIN
+    OPEN p_cursor FOR
+    SELECT ID_Liquidacion, ID_Presupuesto, Monto, Fecha
+    FROM Liquidacion
+    ORDER BY ID_Liquidacion ASC;
+END;
+--Compra Gasto
+CREATE OR REPLACE PROCEDURE InsertarCompraGasto (
+    p_ID_CompraGasto IN INT,
+    p_ID_Permiso INT,
+    p_Numero_Comprobante VARCHAR2,
+    p_Monto_Real DECIMAL,
+    p_Fecha DATE
+)
+AS
+BEGIN
+    INSERT INTO CompraGasto (
+        ID_CompraGasto,
+        ID_Permiso,
+        Numero_Comprobante,
+        Monto_Real,
+        Fecha
+    )
+    VALUES (
+        p_ID_CompraGasto,
+        p_ID_Permiso,
+        p_Numero_Comprobante,
+        p_Monto_Real,
+        p_Fecha
+    );
+
+    COMMIT;
+END;
+--Leer Compra Gasto
+CREATE OR REPLACE PROCEDURE ObtenerDatosCompraGasto (
+    p_cursor OUT SYS_REFCURSOR
+)
+AS
+BEGIN
+    OPEN p_cursor FOR
+    SELECT ID_CompraGasto, ID_Permiso, Numero_Comprobante, Monto_Real, Fecha
+    FROM CompraGasto
+    ORDER BY ID_CompraGasto ASC;
+END;
+
+
+CREATE OR REPLACE PROCEDURE EliminarCompraGasto (
+    p_ID_CompraGasto IN INT
+)
+AS
+BEGIN
+    DELETE FROM CompraGasto
+    WHERE ID_CompraGasto = p_ID_CompraGasto;
+
+    COMMIT;
+END;
+
+CREATE OR REPLACE PROCEDURE EditarCompraGasto (
+    p_ID_CompraGasto IN INT,
+    p_NuevoID_Permiso INT,
+    p_NuevoNumero_Comprobante VARCHAR2,
+    p_NuevoMonto_Real DECIMAL,
+    p_NuevaFecha DATE
+)
+AS
+BEGIN
+    UPDATE CompraGasto
+    SET ID_Permiso = p_NuevoID_Permiso,
+        Numero_Comprobante = p_NuevoNumero_Comprobante,
+        Monto_Real = p_NuevoMonto_Real,
+        Fecha = p_NuevaFecha
+    WHERE ID_CompraGasto = p_ID_CompraGasto;
+
+    COMMIT;
+END;
+
+
+
+
+
+
+
+--DROP TABLE CENTRODECOSTO;
+--DROP TABLE COMPRAGASTO;
+--DROP TABLE LIQUIDACION;
+--DROP TABLE MODIFICACION;
+--DROP TABLE PERMISO;
+--DROP TABLE PRESUPUESTO;
+--DROP TABLE RUBRO;
+--DROP TABLE USUARIO;
+
 
