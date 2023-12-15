@@ -1,13 +1,21 @@
 --objetos pl sql
 
--- Crear la tabla CompraGasto con ID_Permiso como clave foránea
+-- Crear tabla Rubro
+CREATE TABLE Rubro(
+    ID_Rubro INT PRIMARY KEY NOT NULL,
+    Nombre VARCHAR2(255)
+);
+
+-- Crear la tabla CompraGasto con ID_Permiso y ID_Presupuesto como claves foráneas
 CREATE TABLE CompraGasto (
     ID_CompraGasto INT PRIMARY KEY,
     ID_Permiso INT,
+    ID_Presupuesto INT,
     Numero_Comprobante VARCHAR2(255),
     Monto_Real DECIMAL(10, 2),
     Fecha DATE,
-    FOREIGN KEY (ID_Permiso) REFERENCES Permiso(ID_Permiso)
+    FOREIGN KEY (ID_Permiso) REFERENCES Permiso(ID_Permiso),
+    FOREIGN KEY (ID_Presupuesto) REFERENCES Presupuesto(ID_Presupuesto)
 );
 
 
@@ -42,23 +50,24 @@ CREATE TABLE CentroDeCosto (
 
 -- Crear la tabla Presupuesto
 CREATE TABLE Presupuesto (
-    ID_Presupuesto INT PRIMARY KEY NOT NULL,
-    ID_CentroDeCosto INT NOT NULL,
-    ID_RUBRO INT NOT NULL,
-    Monto DECIMAL(10, 2) NOT NULL,
-    Periodo VARCHAR2(255) NOT NULL,
-    FOREIGN KEY (ID_CentroDeCosto) REFERENCES CentroDeCosto(ID_CentroDeCosto),
-    FOREIGN KEY (ID_RUBRO) REFERENCES Rubro(ID_RUBRO)
+    ID_Presupuesto INT PRIMARY KEY,
+    ID_Rubro INT,
+    Nombre VARCHAR2(255),
+    Monto DECIMAL(10, 2),
+    FechaInicio DATE,
+    FechaFin DATE,
+    Estado VARCHAR2(255),
+    FOREIGN KEY (ID_Rubro) REFERENCES Rubro(ID_Rubro)
 );
+
+
 -- Crear la tabla Modificacion
 CREATE TABLE Modificacion (
-    ID_Modificacion INT PRIMARY KEY NOT NULL,
-    ID_PresupuestoOrigen INT NOT NULL,
-    ID_PresupuestoDestino INT NOT NULL,
-    Monto DECIMAL(10, 2) NOT NULL,
-    Fecha DATE NOT NULL,
-    FOREIGN KEY (ID_PresupuestoOrigen) REFERENCES Presupuesto(ID_Presupuesto),
-    FOREIGN KEY (ID_PresupuestoDestino) REFERENCES Presupuesto(ID_Presupuesto)
+    ID_Modificacion INT PRIMARY KEY,
+    ID_Presupuesto INT,
+    TipoModificacion VARCHAR2(50),
+    FechaModificacion DATE,
+    FOREIGN KEY (ID_Presupuesto) REFERENCES Presupuesto(ID_Presupuesto)
 );
 
 -- Crear la tabla Liquidacion
@@ -69,31 +78,6 @@ CREATE TABLE Liquidacion (
     Fecha DATE NOT NULL,
     FOREIGN KEY (ID_Presupuesto) REFERENCES Presupuesto(ID_Presupuesto)
 );
-
-
-CREATE TABLE Rubro(
-    ID_Rubro INT PRIMARY KEY NOT NULL,
-    Nombre VARCHAR2(255)
-);
-
--- Creación de tabla de presupuesto
-CREATE TABLE Presupuesto (
-    ID_Presupuesto INT PRIMARY KEY,
-    Nombre VARCHAR2(255),
-    Monto DECIMAL(10, 2),
-    FechaInicio DATE,
-    FechaFin DATE
-);
-
--- Creación de tabla de modificaciones
-CREATE TABLE Modificacion (
-    ID_Modificacion INT PRIMARY KEY,
-    ID_Presupuesto INT,
-    TipoModificacion VARCHAR2(50),
-    FechaModificacion DATE,
-    FOREIGN KEY (ID_Presupuesto) REFERENCES Presupuesto(ID_Presupuesto)
-);
-
 
 --procedimientos
 
